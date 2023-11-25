@@ -9,17 +9,29 @@
 
 <nav class="navbar bg-base-100">
 	<div class="flex flex-1 gap-4">
-		<a class="btn btn-ghost text-2xl" href="/" aria-current={$page.url.pathname === '/'}>naali</a>
-		<a class="link-hover" href="/about" aria-current={$page.url.pathname === '/about'}>about</a>
-		<a class="link-hover" href="/pricing" aria-current={$page.url.pathname === '/pricing'}>
+		<a
+			class="link-hover font-mono text-2xl font-bold"
+			href="/"
+			aria-current={$page.url.pathname === '/'}>naali</a
+		>
+		<a class="link-hover font-mono" href="/about" aria-current={$page.url.pathname === '/about'}
+			>about</a
+		>
+		<a
+			class="link-hover font-mono"
+			href="/pricing"
+			aria-current={$page.url.pathname === '/pricing'}
+		>
 			pricing
 		</a>
 	</div>
-	<div class="flex flex-none gap-4">
-		<a class="link-hover" href="/signup" aria-current={$page.url.pathname === '/signup'}
+	<div class="flex flex-none gap-4 pr-3">
+		<a class="link-hover font-mono" href="/signup" aria-current={$page.url.pathname === '/signup'}
 			>create an account</a
 		>
-		<a class="link-hover" href="/login" aria-current={$page.url.pathname === '/login'}>login</a>
+		<a class="link-hover font-mono" href="/login" aria-current={$page.url.pathname === '/login'}
+			>login</a
+		>
 	</div>
 </nav>
 
