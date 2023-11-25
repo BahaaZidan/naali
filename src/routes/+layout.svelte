@@ -7,12 +7,20 @@
 	<progress class="progress w-full"></progress>
 {/if}
 
-<nav>
-	<a href="/" aria-current={$page.url.pathname === '/'}>home</a>
-	<a href="/about" data-sveltekit-preload-data aria-current={$page.url.pathname === '/about'}
-		>about</a
-	>
-	<a href="/blog" aria-current={$page.url.pathname === '/blog'}>blog</a>
+<nav class="navbar bg-base-100">
+	<div class="flex flex-1 gap-4">
+		<a class="btn btn-ghost text-2xl" href="/" aria-current={$page.url.pathname === '/'}>naali</a>
+		<a class="link-hover" href="/about" aria-current={$page.url.pathname === '/about'}>about</a>
+		<a class="link-hover" href="/pricing" aria-current={$page.url.pathname === '/pricing'}>
+			pricing
+		</a>
+	</div>
+	<div class="flex flex-none gap-4">
+		<a class="link-hover" href="/signup" aria-current={$page.url.pathname === '/signup'}
+			>create an account</a
+		>
+		<a class="link-hover" href="/login" aria-current={$page.url.pathname === '/login'}>login</a>
+	</div>
 </nav>
 
 {#if $updated}
