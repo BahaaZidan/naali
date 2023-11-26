@@ -1,3 +1,19 @@
+<script>
+	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { page } from '$app/stores';
+</script>
+
+{#if $page.data.session?.user}
+	<p>Signed in as {$page.data.session.user.email}</p>
+	<button on:click={() => signOut()}>Sign out</button>
+	<img src="https://cdn.pixabay.com/photo/2017/08/11/19/36/vw-2632486_1280.png" />
+{:else}
+	<div class="flex items-center gap-3 p-3">
+		<p class="text-2xl">Not signed in.</p>
+		<button class="btn" on:click={() => signIn('github')}>Sign in</button>
+	</div>
+{/if}
+
 <div class="hero bg-base-200 py-5">
 	<div class="hero-content text-center">
 		<div class="max-w-md">

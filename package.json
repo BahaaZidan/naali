@@ -42,6 +42,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.18.3",
+		"@auth/sveltekit": "^0.3.14",
 		"drizzle-orm": "^0.29.0"
 	}
 }
