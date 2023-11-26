@@ -3,9 +3,17 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			DB: D1Database;
+		}
 		// interface PageData {}
-		// interface Platform {}
+		interface Platform {
+			env: {
+				// KV: KVNamespace;
+				DB: D1Database;
+				// BUCKET: R2Bucket;
+			};
+		}
 	}
 }
 
