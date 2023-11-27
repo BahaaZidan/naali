@@ -1,10 +1,9 @@
-import { usersTable } from '$lib/db/schema.js';
+import { get_db } from '$lib/db';
+import { usersTable } from '$lib/db/schema';
 import { json } from '@sveltejs/kit';
-import { drizzle } from 'drizzle-orm/d1';
 
 export const GET = async ({ locals }) => {
-	// const das = await locals.DB.exec('select * from Customers;');
-	const db = drizzle(locals.DB);
+	const db = get_db(locals.DB);
 	const result = await db.select().from(usersTable).all();
 	return json({ result });
 };
