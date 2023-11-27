@@ -1,4 +1,4 @@
-import { usersTable } from '$lib/schema.js';
+import { usersTable } from '$lib/db/schema.js';
 import { json } from '@sveltejs/kit';
 import { drizzle } from 'drizzle-orm/d1';
 
