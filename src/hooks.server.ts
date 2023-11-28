@@ -13,22 +13,5 @@ export const handle = SvelteKitAuth(async (event) => {
 		trustHost: true,
 		adapter: D1Adapter(event.locals.DB)
 		// TODO: implement a logger ?
-		// logger: {
-		// 	error(code, ...message) {
-		// 		console.log('==========================');
-		// 		console.error(code, message);
-		// 		console.log('==========================');
-		// 	},
-		// 	warn(code, ...message) {
-		// 		console.log('==========================');
-		// 		console.warn(code, message);
-		// 		console.log('==========================');
-		// 	},
-		// 	debug(code, ...message) {
-		// 		console.log('==========================');
-		// 		console.debug(code, message);
-		// 		console.log('==========================');
-		// 	}
-		// }
 	};
 }) satisfies Handle;

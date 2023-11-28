@@ -10,32 +10,32 @@ import type {
 
 // all the sqls
 // USER
-export const CREATE_USER_SQL = `INSERT INTO users (id, name, email, emailVerified, image) VALUES (?, ?, ?, ?, ?)`;
-export const GET_USER_BY_ID_SQL = `SELECT * FROM users WHERE id = ?`;
-export const GET_USER_BY_EMAIL_SQL = `SELECT * FROM users WHERE email = ?`;
-export const GET_USER_BY_ACCOUNTL_SQL = `
+const CREATE_USER_SQL = `INSERT INTO users (id, name, email, emailVerified, image) VALUES (?, ?, ?, ?, ?)`;
+const GET_USER_BY_ID_SQL = `SELECT * FROM users WHERE id = ?`;
+const GET_USER_BY_EMAIL_SQL = `SELECT * FROM users WHERE email = ?`;
+const GET_USER_BY_ACCOUNTL_SQL = `
   SELECT u.*
   FROM users u JOIN accounts a ON a.userId = u.id
   WHERE a.providerAccountId = ? AND a.provider = ?`;
-export const UPDATE_USER_BY_ID_SQL = `
+const UPDATE_USER_BY_ID_SQL = `
   UPDATE users 
   SET name = ?, email = ?, emailVerified = ?, image = ?
   WHERE id = ? `;
-export const DELETE_USER_SQL = `DELETE FROM users WHERE id = ?`;
+const DELETE_USER_SQL = `DELETE FROM users WHERE id = ?`;
 
 // SESSION
-export const CREATE_SESSION_SQL =
+const CREATE_SESSION_SQL =
 	'INSERT INTO sessions (id, sessionToken, userId, expires) VALUES (?,?,?,?)';
-export const GET_SESSION_BY_TOKEN_SQL = `
+const GET_SESSION_BY_TOKEN_SQL = `
   SELECT id, sessionToken, userId, expires
   FROM sessions
   WHERE sessionToken = ?`;
-export const UPDATE_SESSION_BY_SESSION_TOKEN_SQL = `UPDATE sessions SET expires = ? WHERE sessionToken = ?`;
-export const DELETE_SESSION_SQL = `DELETE FROM sessions WHERE sessionToken = ?`;
-export const DELETE_SESSION_BY_USER_ID_SQL = `DELETE FROM sessions WHERE userId = ?`;
+const UPDATE_SESSION_BY_SESSION_TOKEN_SQL = `UPDATE sessions SET expires = ? WHERE sessionToken = ?`;
+const DELETE_SESSION_SQL = `DELETE FROM sessions WHERE sessionToken = ?`;
+const DELETE_SESSION_BY_USER_ID_SQL = `DELETE FROM sessions WHERE userId = ?`;
 
 // ACCOUNT
-export const CREATE_ACCOUNT_SQL = `
+const CREATE_ACCOUNT_SQL = `
   INSERT INTO accounts (
     id, userId, type, provider, 
     providerAccountId, refresh_token, access_token, 
@@ -43,15 +43,15 @@ export const CREATE_ACCOUNT_SQL = `
     oauth_token, oauth_token_secret
   ) 
   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-export const GET_ACCOUNT_BY_ID_SQL = `SELECT * FROM accounts WHERE id = ? `;
-export const GET_ACCOUNT_BY_PROVIDER_AND_PROVIDER_ACCOUNT_ID_SQL = `SELECT * FROM accounts WHERE provider = ? AND providerAccountId = ?`;
-export const DELETE_ACCOUNT_BY_PROVIDER_AND_PROVIDER_ACCOUNT_ID_SQL = `DELETE FROM accounts WHERE provider = ? AND providerAccountId = ?`;
-export const DELETE_ACCOUNT_BY_USER_ID_SQL = `DELETE FROM accounts WHERE userId = ?`;
+const GET_ACCOUNT_BY_ID_SQL = `SELECT * FROM accounts WHERE id = ? `;
+// const GET_ACCOUNT_BY_PROVIDER_AND_PROVIDER_ACCOUNT_ID_SQL = `SELECT * FROM accounts WHERE provider = ? AND providerAccountId = ?`;
+const DELETE_ACCOUNT_BY_PROVIDER_AND_PROVIDER_ACCOUNT_ID_SQL = `DELETE FROM accounts WHERE provider = ? AND providerAccountId = ?`;
+const DELETE_ACCOUNT_BY_USER_ID_SQL = `DELETE FROM accounts WHERE userId = ?`;
 
 // VERIFICATION_TOKEN
-export const GET_VERIFICATION_TOKEN_BY_IDENTIFIER_AND_TOKEN_SQL = `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`;
-export const CREATE_VERIFICATION_TOKEN_SQL = `INSERT INTO verification_tokens (identifier, expires, token) VALUES (?,?,?)`;
-export const DELETE_VERIFICATION_TOKEN_SQL = `DELETE FROM verification_tokens WHERE identifier = ? and token = ?`;
+const GET_VERIFICATION_TOKEN_BY_IDENTIFIER_AND_TOKEN_SQL = `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`;
+const CREATE_VERIFICATION_TOKEN_SQL = `INSERT INTO verification_tokens (identifier, expires, token) VALUES (?,?,?)`;
+const DELETE_VERIFICATION_TOKEN_SQL = `DELETE FROM verification_tokens WHERE identifier = ? and token = ?`;
 
 // helper functions
 
@@ -82,7 +82,7 @@ function cleanBindings(bindings: any[]) {
 	return bindings.map((e) => (e === undefined ? null : e));
 }
 
-export async function createRecord<RecordType>(
+async function createRecord<RecordType>(
 	db: D1Database,
 	CREATE_SQL: string,
 	bindings: any[],
@@ -102,7 +102,7 @@ export async function createRecord<RecordType>(
 	}
 }
 
-export async function getRecord<RecordType>(
+async function getRecord<RecordType>(
 	db: D1Database,
 	SQL: string,
 	bindings: any[]
@@ -124,7 +124,7 @@ export async function getRecord<RecordType>(
 	}
 }
 
-export async function updateRecord(db: D1Database, SQL: string, bindings: any[]) {
+async function updateRecord(db: D1Database, SQL: string, bindings: any[]) {
 	try {
 		bindings = cleanBindings(bindings);
 		return await db
@@ -137,7 +137,7 @@ export async function updateRecord(db: D1Database, SQL: string, bindings: any[])
 	}
 }
 
-export async function deleteRecord(db: D1Database, SQL: string, bindings: any[]) {
+async function deleteRecord(db: D1Database, SQL: string, bindings: any[]) {
 	// eslint-disable-next-line no-useless-catch
 	try {
 		bindings = cleanBindings(bindings);
