@@ -44,6 +44,7 @@
 	<h1 class="mb-3 text-3xl">Upload video</h1>
 	<input
 		type="file"
+		accept="video/*"
 		class="file-input file-input-bordered w-full max-w-xs"
 		on:change={handleFileUpload}
 	/>

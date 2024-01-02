@@ -24,6 +24,10 @@ export const POST = async ({ request }) => {
 		return json({ message: 'Missing required parameters.' }, { status: 400 });
 	}
 
+	if (!fileType.includes('video/')) {
+		return json({ message: 'Invalid file type!' }, { status: 400 });
+	}
+
 	const objectKey = `${slugifyString(Date.now().toString())}-${slugifyString(fileName)}`;
 
 	const presignedUrl = await getSignedUrl(
