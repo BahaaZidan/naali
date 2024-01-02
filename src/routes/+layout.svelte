@@ -22,6 +22,13 @@
 	</div>
 	<div class="flex flex-none gap-4 pr-3">
 		{#if $page.data.session?.user}
+			<a
+				class="link-hover font-mono"
+				href="/upload"
+				aria-current={$page.url.pathname === '/upload'}
+			>
+				upload
+			</a>
 			<div class="dropdown dropdown-end">
 				<div tabindex="0" role="button" class="avatar btn btn-circle btn-ghost">
 					<div class="w-10 rounded-full">
