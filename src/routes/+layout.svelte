@@ -39,7 +39,7 @@
 					class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
 					<li>
-						<a class="link-hover" href="/profile">Profile</a>
+						<a class="link-hover" href={`/user/${$page.data.session?.user.id}`}>Profile</a>
 					</li>
 					<li><a class="link-hover" href="/settings">Settings</a></li>
 					<li><button class="link-hover" on:click={() => signOut()}>Logout</button></li>
