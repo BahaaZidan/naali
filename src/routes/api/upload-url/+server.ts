@@ -18,7 +18,7 @@ export async function POST({ request, locals }) {
 			Authorization: `bearer ${CLOUDFLARE_STREAM_API_TOKEN}`,
 			'Tus-Resumable': '1.0.0',
 			'Upload-Length': length,
-			'Upload-Metadata': `requiresignedurls, ${metadata}`,
+			'Upload-Metadata': metadata,
 			'Upload-Creator': authenticatedUserId
 		}
 	});
