@@ -20,16 +20,13 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/adapter-cloudflare": "^3.0.0",
-		"@sveltejs/adapter-node": "^2.0.2",
+		"@sveltejs/adapter-cloudflare": "^3.0.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.16",
 		"daisyui": "^4.4.4",
-		"dotenv": "^16.3.1",
 		"drizzle-kit": "^0.20.6",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^9.0.0",
@@ -51,13 +48,8 @@
 	"dependencies": {
 		"@auth/core": "^0.18.3",
 		"@auth/sveltekit": "^0.5.0",
-		"@aws-sdk/client-s3": "^3.484.0",
-		"@aws-sdk/s3-request-presigner": "^3.484.0",
 		"@uppy/core": "^3.8.0",
 		"@uppy/dashboard": "^3.7.1",
-		"@uppy/drag-drop": "^3.0.3",
-		"@uppy/progress-bar": "^3.0.4",
-		"@uppy/status-bar": "^3.2.5",
 		"@uppy/tus": "^3.5.0",
 		"drizzle-orm": "^0.29.0"
 	}
