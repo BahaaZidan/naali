@@ -11,7 +11,15 @@ export const handle = SvelteKitAuth(async (event) => {
 		providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
 		secret: AUTH_SECRET,
 		trustHost: true,
-		adapter: D1Adapter(event.locals.DB)
+		adapter: D1Adapter(event.locals.DB),
+		callbacks: {
+			session: async ({ session, user }) => {
+				if (session?.user) {
+					session.user.id = user.id;
+				}
+				return session;
+			}
+		}
 		// TODO: implement a logger ?
 	};
 }) satisfies Handle;

@@ -1,9 +1,12 @@
 import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 
-export async function POST({ request }) {
-	const endpoint = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
+export async function POST({ request, locals }) {
+	const session = await locals.getSession();
+	const authenticatedUserId = session?.user?.id;
+	if (!authenticatedUserId) return error(401);
 
+	const endpoint = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
 	const length = request.headers.get('Upload-Length');
 	const metadata = request.headers.get('Upload-Metadata');
 
@@ -15,7 +18,8 @@ export async function POST({ request }) {
 			Authorization: `bearer ${CLOUDFLARE_STREAM_API_TOKEN}`,
 			'Tus-Resumable': '1.0.0',
 			'Upload-Length': length,
-			'Upload-Metadata': metadata
+			'Upload-Metadata': metadata,
+			'Upload-Creator': authenticatedUserId
 		}
 	});
 
