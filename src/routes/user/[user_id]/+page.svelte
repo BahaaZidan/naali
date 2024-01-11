@@ -14,13 +14,13 @@
 	<button class="btn btn-active">follow</button>
 	<button class="btn btn-active">support</button>
 	<div class="divider my-0"></div>
-	<div class="flex">
+	<div class="flex gap-3 flex-wrap justify-center">
 	{#each videos as video}
 	<a href={`/video/${video.id}`}>
-		<div class="card w-96 bg-base-100 shadow-xl">
-			<figure><img src={video.thumbnail} alt="Shoes" /></figure>
+		<div class="card w-96 bg-base-100 shadow-xl p-3">
+			<figure><img src={video.thumbnail} class="w-96 h-52 object-contain" alt="Thumbnail" /></figure>
 			<div class="card-body">
-				<h2 class="card-title">{video.name}</h2>
+				<h2 class="card-title line-clamp-2">{video.name}</h2>
 			</div>
 		</div>
 	</a>
