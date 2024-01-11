@@ -10,19 +10,20 @@
 
 	onMount(() => {
 		const uppy = new Uppy({
-			restrictions: { allowedFileTypes: ['.mp4'] },
+			restrictions: { allowedFileTypes: ['.mp4'] }
 		});
 		uppy
-			.use(Dashboard, { inline: true, target: '#uppy-dashboard', proudlyDisplayPoweredByUppy: false, 
+			.use(Dashboard, {
+				inline: true,
+				target: '#uppy-dashboard',
+				proudlyDisplayPoweredByUppy: false,
 				showProgressDetails: true,
-				metaFields: [
-					{ id: 'name', name: 'Name', placeholder: 'file name' },
-				],
-		 	})
-			.use(Tus, { endpoint: '/api/upload-url', chunkSize: 150 * 1024 * 1024 })
-			.on("complete", () => {
-				window.location.href = `/user/${$page.data.session?.user?.id}`;
+				metaFields: [{ id: 'name', name: 'Name', placeholder: 'file name' }]
 			})
+			.use(Tus, { endpoint: '/api/upload-url', chunkSize: 150 * 1024 * 1024 })
+			.on('complete', () => {
+				window.location.href = `/user/${$page.data.session?.user?.id}`;
+			});
 	});
 </script>
 

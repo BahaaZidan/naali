@@ -4,5 +4,8 @@
 	},
 	"editor.quickSuggestions": {
 		"strings": "on"
+	},
+	"[svelte]": {
+		"editor.defaultFormatter": "svelte.svelte-vscode"
 	}
 }
