@@ -5,10 +5,14 @@
 </script>
 
 {#if $navigating}
-	<progress class="progress w-full"></progress>
+	<div class="h-1.5 max-h-1.5 w-full">
+		<progress class="progress mb-3 h-1.5 w-full rounded-none"></progress>
+	</div>
+{:else}
+	<div class="h-1.5 w-full"></div>
 {/if}
 
-<nav class="navbar flex justify-between bg-base-100">
+<nav class="navbar bg-base-100 flex justify-between">
 	<div class="flex">
 		<a
 			class="link-hover font-mono text-2xl font-bold"
@@ -36,7 +40,7 @@
 					</div>
 				</div>
 				<ul
-					class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
+					class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-52 p-2 shadow"
 				>
 					<li>
 						<a class="link-hover" href={`/user/${$page.data.session?.user.id}`}>Profile</a>
