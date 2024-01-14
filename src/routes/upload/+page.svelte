@@ -22,7 +22,7 @@
 		'WebM',
 		'MPG',
 		'QuickTime'
-	].map((t) => ('.' + t).toLowerCase());
+	].map((t) => '.' + t);
 	onMount(() => {
 		const uppy = new Uppy({
 			restrictions: {
@@ -32,6 +32,9 @@
 		uppy
 			.use(Dashboard, {
 				inline: true,
+				width: '100%',
+				// TODO: make a css variable for progress bar instead of "-6px"
+				height: 'calc(100vh - var(--nav-height) - 6px)',
 				theme: 'auto',
 				target: '#uppy-dashboard',
 				proudlyDisplayPoweredByUppy: false,
@@ -57,11 +60,10 @@
 						'Content-Type': 'application/json'
 					}
 				});
-				return (window.location.href = `/user/${$page.data.session?.user?.id}`);
+				if (result_videos.ok)
+					return (window.location.href = `/user/${$page.data.session?.user?.id}`);
 			});
 	});
 </script>
 
-<div class="flex flex-col items-center">
-	<div id="uppy-dashboard"></div>
-</div>
+<div id="uppy-dashboard"></div>

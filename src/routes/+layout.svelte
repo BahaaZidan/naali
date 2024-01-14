@@ -2,6 +2,13 @@
 	import { navigating, page, updated } from '$app/stores';
 	import { signOut } from '@auth/sveltekit/client';
 	import '../app.css';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		const navbarElement = document.getElementById('main-navbar')?.offsetHeight;
+		if (navbarElement)
+			document.documentElement.style.setProperty('--nav-height', `${navbarElement}px`);
+	});
 </script>
 
 {#if $navigating}
@@ -12,7 +19,7 @@
 	<div class="h-1.5 w-full"></div>
 {/if}
 
-<nav class="navbar bg-base-100 flex justify-between">
+<nav id="main-navbar" class="navbar flex justify-between bg-base-100">
 	<div class="flex">
 		<a
 			class="link-hover font-mono text-2xl font-bold"
@@ -40,7 +47,7 @@
 					</div>
 				</div>
 				<ul
-					class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-52 p-2 shadow"
+					class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
 					<li>
 						<a class="link-hover" href={`/user/${$page.data.session?.user.id}`}>Profile</a>
