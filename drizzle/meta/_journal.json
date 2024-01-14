@@ -22,6 +22,13 @@
       "when": 1705230546044,
       "tag": "0002_loud_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705233049435,
+      "tag": "0003_living_invaders",
+      "breakpoints": true
     }
   ]
 }

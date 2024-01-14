@@ -52,5 +52,5 @@ export const videos_table = sqliteTable('videos', {
 	name: text('name').notNull(),
 	description: text('description'),
 	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-	publish_status: text('publish_status', { enum: ['public', 'private'] })
+	publish_status: text('publish_status', { enum: ['public', 'private'] }).default('private')
 });

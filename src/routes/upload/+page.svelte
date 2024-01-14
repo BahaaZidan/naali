@@ -7,10 +7,27 @@
 
 	import '@uppy/core/dist/style.min.css';
 	import '@uppy/dashboard/dist/style.min.css';
-
+	const allowedFileTypes = [
+		'MP4',
+		'MKV',
+		'MOV',
+		'AVI',
+		'FLV',
+		'MPEG-2 TS',
+		'MPEG-2 PS',
+		'MXF',
+		'LXF',
+		'GXF',
+		'3GP',
+		'WebM',
+		'MPG',
+		'QuickTime'
+	].map((t) => ('.' + t).toLowerCase());
 	onMount(() => {
 		const uppy = new Uppy({
-			restrictions: { allowedFileTypes: ['.mp4'] }
+			restrictions: {
+				allowedFileTypes
+			}
 		});
 		uppy
 			.use(Dashboard, {
@@ -21,8 +38,25 @@
 				metaFields: [{ id: 'name', name: 'Name', placeholder: 'file name' }]
 			})
 			.use(Tus, { endpoint: '/api/upload-url', chunkSize: 150 * 1024 * 1024 })
-			.on('complete', () => {
-				window.location.href = `/user/${$page.data.session?.user?.id}`;
+			.on('complete', async (result) => {
+				const creator = $page.data.session?.user?.id;
+				// TODO: -_-
+				if (!creator) throw new Error('Something went wrong!');
+				const videos = result.successful.map((r) => {
+					return {
+						name: r.name,
+						id: new URL(r.uploadURL).pathname.split('/')[2],
+						creator
+					};
+				});
+				const result_videos = await fetch('/api/create-video-entry', {
+					method: 'POST',
+					body: JSON.stringify({ videos }),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+				return (window.location.href = `/user/${$page.data.session?.user?.id}`);
 			});
 	});
 </script>
