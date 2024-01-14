@@ -1,5 +1,6 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import type { AdapterAccount } from '@auth/core/adapters';
+import { sql } from 'drizzle-orm';
 
 export const usersTable = sqliteTable('users', {
 	id: text('id').notNull().primaryKey(),
@@ -41,4 +42,15 @@ export const verificationTokensTable = sqliteTable('verification_tokens', {
 	identifier: text('identifier').notNull(),
 	token: text('token').notNull().primaryKey(),
 	expires: integer('expires', { mode: 'timestamp_ms' }).notNull()
+});
+
+export const videos_table = sqliteTable('videos', {
+	id: text('id').primaryKey(),
+	creator: text('creator')
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	name: text('name').notNull(),
+	description: text('description'),
+	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+	publish_status: text('publish_status', { enum: ['public', 'private'] })
 });

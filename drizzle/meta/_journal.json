@@ -8,6 +8,20 @@
       "when": 1701104163897,
       "tag": "0000_windy_jocasta",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1705230038983,
+      "tag": "0001_opposite_amazoness",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705230546044,
+      "tag": "0002_loud_wolf_cub",
+      "breakpoints": true
     }
   ]
 }
