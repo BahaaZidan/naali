@@ -7,7 +7,6 @@ import { and, eq, or } from 'drizzle-orm';
 export const load = async ({ params, locals }) => {
 	const db = get_db(locals.DB);
 
-	console.log({ video_id: params.video_id });
 	const logged_user_id = (await locals.getSession())?.user?.id;
 
 	// TODO: return SEO info (open graph) without the video id for streaming
