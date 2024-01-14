@@ -32,6 +32,7 @@
 		uppy
 			.use(Dashboard, {
 				inline: true,
+				theme: 'auto',
 				target: '#uppy-dashboard',
 				proudlyDisplayPoweredByUppy: false,
 				showProgressDetails: true,

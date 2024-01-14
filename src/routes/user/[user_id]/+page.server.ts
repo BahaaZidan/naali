@@ -23,6 +23,7 @@ export const load = async ({ params, locals }) => {
 		);
 
 	return {
+		is_own_profile: is_own_videos,
 		user,
 		videos: videos_result.map((v) => ({
 			...v,
