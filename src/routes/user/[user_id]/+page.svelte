@@ -3,6 +3,8 @@
 
 	export let data;
 	const videos = data.videos;
+	const private_videos = videos.filter((v) => v.publish_status === 'private');
+	const public_videos = videos.filter((v) => v.publish_status === 'public');
 	const user = data.user;
 	const is_own_profile = data.is_own_profile;
 </script>
@@ -24,11 +26,34 @@
 		{/if}
 	</div>
 </div>
-
 <div class="divider my-0"></div>
-{#if videos}
-	<div class="flex flex-wrap gap-3 p-3">
-		{#each videos as video}
+
+{#if is_own_profile}
+	<div class="p-3">
+		<h3 class="text-xl font-bold">Private Videos</h3>
+		<h4 class="mb-2 text-sm">
+			Videos you upload are private by default. You can publish them anytime you want.
+		</h4>
+		<div class="flex flex-wrap gap-3">
+			{#each private_videos as video}
+				<VideoCard
+					id={video.id}
+					name={video.name}
+					created_at={video.created_at}
+					thumbnail={video.thumbnail}
+				/>
+			{/each}
+		</div>
+	</div>
+	<div class="divider my-0"></div>
+{/if}
+
+<div class="p-3">
+	{#if is_own_profile}
+		<h3 class="mb-2 text-xl font-bold">Public Videos</h3>
+	{/if}
+	<div class="flex flex-wrap gap-3">
+		{#each public_videos as video}
 			<VideoCard
 				id={video.id}
 				name={video.name}
@@ -37,4 +62,4 @@
 			/>
 		{/each}
 	</div>
-{/if}
+</div>

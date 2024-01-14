@@ -22,12 +22,14 @@ export const load = async ({ params, locals }) => {
 				: and(eq(videos_table.creator, user_id), eq(videos_table.publish_status, 'public'))
 		);
 
+	const videos = videos_result.map((v) => ({
+		...v,
+		thumbnail: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${v.id}/thumbnails/thumbnail.jpg`
+	}));
+
 	return {
 		is_own_profile: is_own_videos,
 		user,
-		videos: videos_result.map((v) => ({
-			...v,
-			thumbnail: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${v.id}/thumbnails/thumbnail.jpg`
-		}))
+		videos
 	};
 };
