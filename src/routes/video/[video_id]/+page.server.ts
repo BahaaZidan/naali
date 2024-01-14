@@ -1,23 +1,34 @@
-import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/private';
-import type { Result, VideoDetails } from '$lib/types/cloudflare';
+import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
+import { get_db } from '$lib/db';
+import { videos_table } from '$lib/db/schema';
 import { error } from '@sveltejs/kit';
+import { and, eq, or } from 'drizzle-orm';
 
-export const load = async ({ params }) => {
-	const details_endpoint = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream/${params.video_id}`;
+export const load = async ({ params, locals }) => {
+	const db = get_db(locals.DB);
 
-	const video_result = await (
-		await fetch(details_endpoint, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `bearer ${CLOUDFLARE_STREAM_API_TOKEN}`
-			}
-		})
-	).json<Result<VideoDetails>>();
+	console.log({ video_id: params.video_id });
+	const logged_user_id = (await locals.getSession())?.user?.id;
 
-	if (!video_result.result) return error(404);
+	// TODO: return SEO info (open graph) without the video id for streaming
+	if (!logged_user_id) return error(404);
+
+	const result = await db
+		.select()
+		.from(videos_table)
+		.where(
+			and(
+				eq(videos_table.id, params.video_id),
+				or(eq(videos_table.publish_status, 'public'), eq(videos_table.creator, logged_user_id))
+			)
+		);
+	const video = result[0];
+	if (!video) return error(404);
 
 	return {
-		video: video_result.result
+		video: {
+			...video,
+			stream_url: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${video.id}/iframe`
+		}
 	};
 };
