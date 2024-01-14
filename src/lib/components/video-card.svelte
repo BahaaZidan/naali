@@ -8,7 +8,7 @@
 </script>
 
 <a class="w-64" href={`/video/${id}`}>
-	<div class={`h-36 w-full bg-black`}>
+	<div class={`h-36 w-full rounded-sm bg-black`}>
 		<img class="h-36 w-64 object-contain" src={thumbnail} alt="" />
 	</div>
 	<div class="text-md flex flex-col leading-tight tracking-tighter">
