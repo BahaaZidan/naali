@@ -47,12 +47,13 @@
 					</div>
 				</div>
 				<ul
-					class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
+					class="menu dropdown-content menu-md z-[9999] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
 					<li>
 						<a class="link-hover" href={`/user/${$page.data.session?.user.id}`}>Profile</a>
 					</li>
-					<li><a class="link-hover" href="/settings">Settings</a></li>
+					<li><a class="link-hover" href="/studio">Settings</a></li>
+					<div class="divider m-0"></div>
 					<li><button class="link-hover" on:click={() => signOut()}>Logout</button></li>
 				</ul>
 			</div>

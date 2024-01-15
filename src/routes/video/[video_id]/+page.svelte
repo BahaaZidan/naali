@@ -14,5 +14,5 @@
 </div>
 <div class="flex flex-col">
 	<h2 class="text-3xl">{video.name}</h2>
-	<p>{video.description}</p>
+	<p>{video.description || ''}</p>
 </div>
