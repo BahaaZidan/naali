@@ -15,7 +15,8 @@ export async function POST({ request, locals }) {
 				// TODO: validate ids better
 				id: string([minLength(1)]),
 				creator: string([minLength(1)]),
-				name: string([minLength(1)])
+				name: string([minLength(1)]),
+				description: string()
 			})
 		)
 	});
