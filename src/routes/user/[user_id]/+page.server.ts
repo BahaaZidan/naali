@@ -15,6 +15,10 @@ export const actions = {
 		if (!id) {
 			return fail(400, { id, missing: true });
 		}
+		const description = formData.get('description')?.toString();
+		if (!description) {
+			return fail(400, { description, missing: true });
+		}
 
 		const db = get_db(locals.DB);
 
@@ -24,7 +28,7 @@ export const actions = {
 
 		const insertion = await db
 			.update(videos_table)
-			.set({ name, publish_status: 'public' })
+			.set({ name, description, publish_status: 'public' })
 			.where(and(eq(videos_table.id, id), eq(videos_table.creator, logged_in_user_id)));
 		if (!insertion.success) return fail(500);
 

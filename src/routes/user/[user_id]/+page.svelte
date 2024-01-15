@@ -32,7 +32,10 @@
 	<div class="p-3">
 		<h3 class="text-xl font-bold">Private Videos</h3>
 		<h4 class="mb-2 text-sm">
-			Videos you upload are private by default. You can publish them anytime you want.
+			Videos you upload are private by default. You can publish them here or from your <a
+				href="/studio"
+				class="link-hover link">studio</a
+			>.
 		</h4>
 		<div class="flex flex-wrap gap-3">
 			{#each private_videos as video}
@@ -62,6 +65,16 @@
 									type="text"
 									class="input input-bordered w-full max-w-xs"
 									value={video.name}
+								/>
+							</label>
+							<label>
+								<div class="label">
+									<span class="label-text">Description</span>
+								</div>
+								<textarea
+									name="description"
+									class="textarea textarea-bordered h-52 w-full"
+									value={video.description}
 								/>
 							</label>
 						</form>
