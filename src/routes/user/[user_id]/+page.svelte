@@ -20,8 +20,13 @@
 		<p>{user.email}</p>
 		{#if !is_own_profile}
 			<div class="flex gap-2">
-				<button class="btn btn-sm">follow</button>
-				<button class="btn btn-sm">support</button>
+				<button class="btn btn-sm">Follow</button>
+				<button class="btn btn-sm">Support</button>
+			</div>
+		{:else}
+			<div class="flex gap-2">
+				<a class="btn btn-sm" href="/studio">Edit profile</a>
+				<a class="btn btn-sm" href="/studio/videos">Manage videos</a>
 			</div>
 		{/if}
 	</div>
@@ -33,7 +38,7 @@
 		<h3 class="text-xl font-bold">Private Videos</h3>
 		<h4 class="mb-2 text-sm">
 			Videos you upload are private by default. You can publish them here or from your <a
-				href="/studio"
+				href="/studio/videos"
 				class="link-hover link">studio</a
 			>.
 		</h4>
