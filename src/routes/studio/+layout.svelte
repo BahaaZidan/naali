@@ -31,7 +31,7 @@
 				</li>
 			{/each}
 		</ul>
-		<div class="px-3">
+		<div class="w-full px-3">
 			<slot />
 		</div>
 	</div>
