@@ -56,10 +56,10 @@
 						dialog?.showModal();
 					}}
 				/>
-				<dialog id={`publish_vid_${video.id}_dialog`} class="modal">
+				<dialog id="publish_vid_{video.id}_dialog" class="modal">
 					<div class="modal-box">
 						<h3 class="text-lg font-bold">Edit info before publishing!</h3>
-						<form method="POST" id={`publish_vid_${video.id}_form`}>
+						<form method="POST" id="publish_vid_{video.id}_form">
 							<input name="id" type="text" class="hidden" value={video.id} />
 							<label>
 								<div class="label">
@@ -88,9 +88,7 @@
 								<!-- if there is a button in form, it will close the modal -->
 								<button class="btn">Close</button>
 							</form>
-							<button class="btn" type="submit" form={`publish_vid_${video.id}_form`}
-								>Publish</button
-							>
+							<button class="btn" type="submit" form="publish_vid_{video.id}_form">Publish</button>
 						</div>
 					</div>
 				</dialog>

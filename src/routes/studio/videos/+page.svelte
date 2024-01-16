@@ -35,27 +35,26 @@
 									}}>Delete</button
 								>
 							</li>
-							<li><button>Edit</button></li>
+							<li><a href="/studio/videos/{video.id}">Edit</a></li>
 						</ul>
 					</div>
 				</td>
 			</tr>
-			<dialog id={`dialog_delete_${video.id}`} class="modal">
+			<dialog id="dialog_delete_{video.id}" class="modal">
 				<div class="modal-box">
 					<h3 class="text-lg font-bold">Are you sure ?</h3>
 					<p>
 						You're about to delete <span class="font-bold italic">{video.name}</span>. This action
 						is irreversible! Are you sure you want to continue ?
 					</p>
-					<form method="POST" action="?/delete" id={`form_delete_${video.id}`}>
+					<form method="POST" action="?/delete" id="form_delete_{video.id}">
 						<input name="id" type="hidden" value={video.id} />
 					</form>
 					<div class="modal-action">
 						<form method="dialog">
 							<button class="btn">Close</button>
 						</form>
-						<button class="btn btn-error" type="submit" form={`form_delete_${video.id}`}
-							>Delete</button
+						<button class="btn btn-error" type="submit" form="form_delete_{video.id}">Delete</button
 						>
 					</div>
 				</div>
