@@ -16,9 +16,6 @@ export const actions = {
 			return fail(400, { id, missing: true });
 		}
 		const description = formData.get('description')?.toString();
-		if (!description) {
-			return fail(400, { description, missing: true });
-		}
 
 		const db = get_db(locals.DB);
 
@@ -39,7 +36,7 @@ export const actions = {
 export const load = async ({ params, locals }) => {
 	const db = get_db(locals.DB);
 	const user_id = params.user_id;
-	const user = (await db.select().from(usersTable).where(eq(usersTable.id, user_id)))[0];
+	const user = (await db.select().from(usersTable).where(eq(usersTable.id, user_id)).limit(1))[0];
 
 	if (!user) return error(404);
 

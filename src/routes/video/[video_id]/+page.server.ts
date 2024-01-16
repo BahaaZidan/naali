@@ -20,7 +20,8 @@ export const load = async ({ params, locals }) => {
 				eq(videos_table.id, params.video_id),
 				or(eq(videos_table.publish_status, 'public'), eq(videos_table.creator, logged_user_id))
 			)
-		);
+		)
+		.limit(1);
 	const video = result[0];
 	if (!video) return error(404);
 
