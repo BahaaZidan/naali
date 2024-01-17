@@ -1,6 +1,6 @@
 <script>
 	import GoogleIcon from 'virtual:icons/tabler/brand-google-filled';
-	import AppleIcon from 'virtual:icons/tabler/brand-apple-filled';
+	// import AppleIcon from 'virtual:icons/tabler/brand-apple-filled';
 	import GitHubIcon from 'virtual:icons/tabler/brand-github-filled';
 	import { signIn } from '@auth/sveltekit/client';
 	import FullScreenContainer from '$lib/components/full-screen-container.svelte';
@@ -17,12 +17,12 @@
 						Google
 					</button>
 				</div>
-				<div class="form-control mt-6 w-full">
+				<!-- <div class="form-control mt-6 w-full">
 					<button class="btn btn-active">
 						<AppleIcon width={32} height={32} />
 						Apple
 					</button>
-				</div>
+				</div> -->
 				<div class="form-control mt-6 w-full">
 					<button class="btn btn-neutral btn-active" on:click={() => signIn('github')}>
 						<GitHubIcon width={32} height={32} />
