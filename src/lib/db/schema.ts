@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 import { sql } from 'drizzle-orm';
 
@@ -54,3 +54,31 @@ export const videos_table = sqliteTable('videos', {
 	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 	publish_status: text('publish_status', { enum: ['public', 'private'] }).default('private')
 });
+
+// export const posts_table = sqliteTable('posts', {
+// 	id: text('id').primaryKey(),
+// 	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+// 	type: text('type', { enum: ['video'] }).default('video'),
+// 	message: text('message'),
+// 	creator: text('creator')
+// 		.notNull()
+// 		.references(() => usersTable.id, { onDelete: 'cascade' }),
+// 	video_id: text('video_id')
+// 		.notNull()
+// 		.references(() => videos_table.id, { onDelete: 'cascade' })
+// });
+
+export const follows_table = sqliteTable(
+	'follows',
+	{
+		follower: text('follower')
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		followed: text('followed')
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' })
+	},
+	(t) => ({
+		unq: uniqueIndex('follower_followed').on(t.follower, t.followed)
+	})
+);
