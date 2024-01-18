@@ -1,5 +1,5 @@
 import { get_db } from '$lib/db/index.js';
-import { posts_table, videos_table } from '$lib/db/schema.js';
+import { posts_table, videos_table } from '$lib/db/schema';
 import { error, json } from '@sveltejs/kit';
 import { minLength, object, parse, string } from 'valibot';
 
