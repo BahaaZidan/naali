@@ -50,6 +50,25 @@ export const actions = {
 		if (!insert.success) return fail(500);
 
 		return { success: true };
+	},
+	unfollow: async ({ locals, request }) => {
+		const formData = await request.formData();
+		const id = formData.get('id')?.toString();
+		if (!id) {
+			return fail(400, { id, missing: true });
+		}
+
+		const session = await locals.getSession();
+		const logged_in_user_id = session?.user?.id;
+		if (!logged_in_user_id) return fail(401);
+
+		const db = get_db(locals.DB);
+		const deletion = await db
+			.delete(follows_table)
+			.where(and(eq(follows_table.follower, logged_in_user_id), eq(follows_table.followed, id)));
+		if (!deletion.success) return fail(500);
+
+		return { success: true };
 	}
 };
 

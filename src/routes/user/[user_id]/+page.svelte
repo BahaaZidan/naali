@@ -21,7 +21,10 @@
 		{#if !is_own_profile}
 			<div class="flex gap-2">
 				{#if data.is_followed}
-					<button class="btn btn-sm">Unfollow</button>
+					<form method="post" action="?/unfollow">
+						<input type="hidden" value={user.id} name="id" />
+						<button class="btn btn-sm" type="submit">Unfollow</button>
+					</form>
 				{:else}
 					<form method="post" action="?/follow">
 						<input type="hidden" value={user.id} name="id" />
