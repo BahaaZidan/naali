@@ -8,6 +8,9 @@
 	import '@uppy/core/dist/style.min.css';
 	import '@uppy/dashboard/dist/style.min.css';
 
+	let status: 'pendingupload' | 'downloading' | 'queued' | 'inprogress' | 'ready' | 'error' =
+		'queued';
+
 	const allowedFileTypes = [
 		'MP4',
 		'MKV',
@@ -66,7 +69,7 @@
 					}
 				]
 			})
-			.use(Tus, { endpoint: '/api/upload-url', chunkSize: 150 * 1024 * 1024 })
+			.use(Tus, { endpoint: '/api/video/upload-url', chunkSize: 150 * 1024 * 1024 })
 			.on('file-added', (file) => {
 				uppy.getPlugin('Dashboard')?.setPluginState({
 					fileCardFor: file.id || null,
@@ -85,16 +88,56 @@
 						creator
 					};
 				})[0];
-				const result_video = await fetch('/api/create-video-entry', {
-					method: 'POST',
-					body: JSON.stringify({ video }),
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
-				if (result_video.ok) return (window.location.href = `/video/${video.id}`);
+
+				// @ts-expect-error wrong ts types
+				document.getElementById('processing_modal')?.showModal();
+				let interval = setInterval(() => {
+					fetch(`/api/video/${video.id}/state`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(async (res) => {
+						const result = await res.json<{ status: typeof status }>();
+						status = result?.status;
+
+						// TODO: handle errors (lol)
+						if (result?.status === 'ready') {
+							clearInterval(interval);
+							const video_entry = await fetch('/api/video/create-entry', {
+								method: 'POST',
+								body: JSON.stringify({ video }),
+								headers: {
+									'Content-Type': 'application/json'
+								}
+							});
+							if (video_entry.ok) return (window.location.href = `/video/${video.id}`);
+						}
+					});
+				}, 500);
 			});
 	});
 </script>
 
 <div id="uppy-dashboard"></div>
+<dialog id="processing_modal" class="modal">
+	<div class="modal-box">
+		<h3 class="text-lg font-bold">We're preparing the video for streaming</h3>
+		<ul class="steps steps-vertical">
+			<li
+				class="step"
+				class:step-primary={status === 'queued' || status === 'inprogress' || status === 'ready'}
+			>
+				Queued
+			</li>
+			<li class="step" class:step-primary={status === 'inprogress' || status === 'ready'}>
+				In progress
+			</li>
+			{#if status === 'error'}
+				<li class="step" class:step-error={status === 'error'}>Error</li>
+			{:else}
+				<li class="step" class:step-primary={status === 'ready'}>Ready</li>
+			{/if}
+		</ul>
+	</div>
+</dialog>
