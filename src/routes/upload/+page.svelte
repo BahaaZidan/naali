@@ -26,8 +26,10 @@
 	].map((t) => '.' + t);
 	onMount(() => {
 		const uppy = new Uppy({
+			allowMultipleUploads: false,
 			restrictions: {
-				allowedFileTypes
+				allowedFileTypes,
+				maxNumberOfFiles: 1
 			}
 		});
 		uppy
@@ -65,6 +67,12 @@
 				]
 			})
 			.use(Tus, { endpoint: '/api/upload-url', chunkSize: 150 * 1024 * 1024 })
+			.on('file-added', (file) => {
+				uppy.getPlugin('Dashboard')?.setPluginState({
+					fileCardFor: file.id || null,
+					activeOverlayType: file.id ? 'FileCard' : null
+				});
+			})
 			.on('complete', async (result) => {
 				const creator = $page.data.session?.user?.id;
 				// TODO: -_-
