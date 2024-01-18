@@ -50,6 +50,13 @@
       "when": 1705579884194,
       "tag": "0006_lovely_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1705601885354,
+      "tag": "0007_giant_meltdown",
+      "breakpoints": true
     }
   ]
 }

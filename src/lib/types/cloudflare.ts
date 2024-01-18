@@ -49,7 +49,7 @@ export type Status = {
 	errorReasonCode: string;
 	errorReasonText: string;
 	pctComplete: string;
-	state: string;
+	state: 'pendingupload' | 'downloading' | 'queued' | 'inprogress' | 'ready' | 'error';
 };
 
 export type Watermark = {

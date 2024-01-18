@@ -1,7 +1,7 @@
 import { get_db } from '$lib/db/index.js';
 import { posts_table, videos_table } from '$lib/db/schema';
 import { error, json } from '@sveltejs/kit';
-import { minLength, object, parse, string } from 'valibot';
+import { minLength, number, object, parse, string } from 'valibot';
 
 export async function POST({ request, locals }) {
 	const session = await locals.getSession();
@@ -15,7 +15,8 @@ export async function POST({ request, locals }) {
 			id: string([minLength(1)]),
 			creator: string([minLength(1)]),
 			name: string([minLength(1)]),
-			description: string()
+			description: string(),
+			duration: number()
 		})
 	});
 	const validated_input = parse(schema, input);

@@ -19,5 +19,8 @@ export async function GET({ locals, params }) {
 	const video_details = await response.json<Result<VideoDetails>>();
 	if (!video_details.success) return error(500);
 
-	return json({ status: video_details.result?.status.state });
+	return json({
+		status: video_details.result?.status.state,
+		duration: video_details.result?.duration
+	});
 }
