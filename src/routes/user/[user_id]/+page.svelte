@@ -50,6 +50,7 @@
 			{#each private_videos as video}
 				<VideoCard
 					id={video.id}
+					duration={video.duration}
 					name={video.name}
 					created_at={video.created_at}
 					thumbnail={video.thumbnail}
@@ -110,6 +111,7 @@
 		{#each public_videos as video}
 			<VideoCard
 				id={video.id}
+				duration={video.duration}
 				name={video.name}
 				created_at={video.created_at}
 				thumbnail={video.thumbnail}

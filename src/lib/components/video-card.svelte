@@ -1,18 +1,31 @@
 <script lang="ts">
-	import { formatDistance } from 'date-fns';
+	import { parseIsoDurationString } from '$lib/utils/date';
+	import { formatDistance, formatDuration, formatISODuration } from 'date-fns';
 	import type { MouseEventHandler } from 'svelte/elements';
 
 	export let id: string;
 	export let name: string;
 	export let thumbnail: string;
+	export let duration: number;
 	export let created_at: string | undefined | null;
 	export let is_private: boolean | undefined = undefined;
 	export let on_publish_click: MouseEventHandler<HTMLButtonElement> | undefined = undefined;
+
+	function formatSeconds(seconds: number) {
+		const isoDuration = formatISODuration({ seconds });
+		const parsed = parseIsoDurationString(isoDuration);
+		const base = `${parsed.minutes}:${Math.trunc(parsed.seconds || 0)}`;
+		if (parsed.hours) return `${parsed.hours}:${base}`;
+		return base;
+	}
 </script>
 
 <a class="w-64" href="/video/{id}">
-	<div class="h-36 w-full rounded-sm bg-black">
+	<div class="relative h-36 w-full rounded-sm bg-black">
 		<img class="h-36 w-64 object-contain" src={thumbnail} alt="" />
+		<div class="absolute bottom-1 right-2 bg-black bg-opacity-40 text-white">
+			{formatSeconds(duration)}
+		</div>
 	</div>
 	<div class="text-md flex flex-col leading-tight tracking-tighter">
 		<div class="overflow-hidden overflow-ellipsis text-black dark:text-white">{name}</div>
