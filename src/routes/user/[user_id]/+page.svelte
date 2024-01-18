@@ -46,12 +46,6 @@
 {#if is_own_profile && private_videos.length}
 	<div class="p-3">
 		<h3 class="text-xl font-bold">Private Videos</h3>
-		<h4 class="mb-2 text-sm">
-			Videos you upload are private by default. You can publish them here or from your <a
-				href="/studio/videos"
-				class="link-hover link">studio</a
-			>.
-		</h4>
 		<div class="flex flex-wrap gap-3">
 			{#each private_videos as video}
 				<VideoCard
