@@ -92,7 +92,7 @@
 				// @ts-expect-error wrong ts types
 				document.getElementById('processing_modal')?.showModal();
 				let interval = setInterval(() => {
-					fetch(`/api/video/${video.id}/state`, {
+					fetch(`/api/video/${video.id}/details`, {
 						method: 'GET',
 						headers: {
 							'Content-Type': 'application/json'
