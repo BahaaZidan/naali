@@ -55,18 +55,18 @@ export const videos_table = sqliteTable('videos', {
 	publish_status: text('publish_status', { enum: ['public', 'private'] }).default('private')
 });
 
-// export const posts_table = sqliteTable('posts', {
-// 	id: text('id').primaryKey(),
-// 	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-// 	type: text('type', { enum: ['video'] }).default('video'),
-// 	message: text('message'),
-// 	creator: text('creator')
-// 		.notNull()
-// 		.references(() => usersTable.id, { onDelete: 'cascade' }),
-// 	video_id: text('video_id')
-// 		.notNull()
-// 		.references(() => videos_table.id, { onDelete: 'cascade' })
-// });
+export const posts_table = sqliteTable('posts', {
+	id: text('id').primaryKey(),
+	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+	type: text('type', { enum: ['video'] }).default('video'),
+	caption: text('caption'),
+	creator: text('creator')
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	video_id: text('video_id')
+		.notNull()
+		.references(() => videos_table.id, { onDelete: 'cascade' })
+});
 
 export const follows_table = sqliteTable(
 	'follows',
