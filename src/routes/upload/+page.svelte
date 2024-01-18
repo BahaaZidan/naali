@@ -77,23 +77,22 @@
 				const creator = $page.data.session?.user?.id;
 				// TODO: -_-
 				if (!creator) throw new Error('Something went wrong!');
-				const videos = result.successful.map((r) => {
+				const video = result.successful.map((r) => {
 					return {
 						name: r.meta.name,
 						description: r.meta.description,
 						id: new URL(r.uploadURL).pathname.split('/')[2],
 						creator
 					};
-				});
-				const result_videos = await fetch('/api/create-video-entry', {
+				})[0];
+				const result_video = await fetch('/api/create-video-entry', {
 					method: 'POST',
-					body: JSON.stringify({ videos }),
+					body: JSON.stringify({ video }),
 					headers: {
 						'Content-Type': 'application/json'
 					}
 				});
-				if (result_videos.ok)
-					return (window.location.href = `/user/${$page.data.session?.user?.id}`);
+				if (result_video.ok) return (window.location.href = `/video/${video.id}`);
 			});
 	});
 </script>

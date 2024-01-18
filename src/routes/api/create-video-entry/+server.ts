@@ -1,7 +1,7 @@
 import { get_db } from '$lib/db/index.js';
-import { videos_table } from '$lib/db/schema.js';
+import { posts_table, videos_table } from '$lib/db/schema.js';
 import { error, json } from '@sveltejs/kit';
-import { minLength, object, parse, string, array } from 'valibot';
+import { minLength, object, parse, string } from 'valibot';
 
 export async function POST({ request, locals }) {
 	const session = await locals.getSession();
@@ -10,23 +10,26 @@ export async function POST({ request, locals }) {
 
 	const input = await request.json();
 	const schema = object({
-		videos: array(
-			object({
-				// TODO: validate ids better
-				id: string([minLength(1)]),
-				creator: string([minLength(1)]),
-				name: string([minLength(1)]),
-				description: string()
-			})
-		)
+		video: object({
+			// TODO: validate ids better
+			id: string([minLength(1)]),
+			creator: string([minLength(1)]),
+			name: string([minLength(1)]),
+			description: string()
+		})
 	});
 	const validated_input = parse(schema, input);
-	const videos = validated_input.videos;
+	const video = validated_input.video;
+	const post = {
+		id: crypto.randomUUID(),
+		video_id: video.id,
+		creator: video.creator
+	};
 	const db = get_db(locals.DB);
 
-	const result = await db.insert(videos_table).values(videos);
-
-	if (result.error) return error(500);
+	const insert_video = await db.insert(videos_table).values(video);
+	const insert_post = await db.insert(posts_table).values(post);
+	if (insert_video.error || insert_post.error) return error(500);
 
 	return json(validated_input);
 }
