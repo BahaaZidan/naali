@@ -62,7 +62,7 @@ export const verificationTokensTable = pgTable(
 
 export const videosTable = pgTable('videos', {
 	id: text('id').primaryKey(),
-	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+	createdAt: timestamp('createdAt').defaultNow(),
 	creator: text('creator')
 		.notNull()
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
@@ -74,7 +74,7 @@ export const videosTable = pgTable('videos', {
 
 export const postsTable = pgTable('posts', {
 	id: text('id').primaryKey(),
-	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+	createdAt: timestamp('createdAt').defaultNow(),
 	type: text('type', { enum: ['video'] }).default('video'),
 	caption: text('caption'),
 	creator: text('creator')

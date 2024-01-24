@@ -52,7 +52,7 @@
 					id={video.id}
 					duration={video.duration}
 					name={video.name}
-					created_at={video.created_at}
+					createdAt={video.createdAt}
 					thumbnail={video.thumbnail}
 					is_private
 					on_publish_click={() => {
@@ -113,7 +113,7 @@
 				id={video.id}
 				duration={video.duration}
 				name={video.name}
-				created_at={video.created_at}
+				createdAt={video.createdAt}
 				thumbnail={video.thumbnail}
 			/>
 		{/each}

@@ -7,7 +7,7 @@
 	export let name: string;
 	export let thumbnail: string;
 	export let duration: number;
-	export let created_at: string | undefined | null;
+	export let createdAt: Date | undefined | null;
 	export let is_private: boolean | undefined = undefined;
 	export let on_publish_click: MouseEventHandler<HTMLButtonElement> | undefined = undefined;
 
@@ -43,8 +43,8 @@
 				</svg>
 			</div>
 		</div> -->
-		{#if created_at}
-			<div class="text-gray-400">{formatDistance(created_at, new Date(), { addSuffix: true })}</div>
+		{#if createdAt}
+			<div class="text-gray-400">{formatDistance(createdAt, new Date(), { addSuffix: true })}</div>
 		{/if}
 		{#if is_private}
 			<button on:click|stopPropagation|preventDefault={on_publish_click} class="btn btn-sm mt-2">

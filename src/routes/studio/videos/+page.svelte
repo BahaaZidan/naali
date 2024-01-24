@@ -22,7 +22,7 @@
 				<img src={video.thumbnail} alt="thumbnail" class="h-16 w-28 object-contain" />
 			</td>
 			<td>{video.name}</td>
-			<td>{video.created_at}</td>
+			<td>{video.createdAt}</td>
 			<td>{video.publishStatus}</td>
 			<td class="p-0 px-3">
 				<div class="dropdown">
