@@ -1,9 +1,0 @@
-name = "naali"
-account_id = "b99a6ff74ee9201cfb8d0e25db6d0a02"
-compatibility_date = "2023-07-02"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "naali"
-# TODO: is this a secret ? (lol, no time to find out. gotta go fast!)
-database_id = "140a491b-1155-4842-aa79-f2340d75e5fe"
