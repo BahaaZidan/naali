@@ -1,7 +1,7 @@
-import { get_db } from '$lib/db/index.js';
-import { posts_table, videos_table } from '$lib/db/schema';
+import { postsTable, videosTable } from '$lib/db/schema';
 import { error, json } from '@sveltejs/kit';
 import { minLength, number, object, parse, string } from 'valibot';
+import { db } from '$lib/db';
 
 export async function POST({ request, locals }) {
 	const session = await locals.getSession();
@@ -23,14 +23,14 @@ export async function POST({ request, locals }) {
 	const video = validated_input.video;
 	const post = {
 		id: crypto.randomUUID(),
-		video_id: video.id,
+		videoId: video.id,
 		creator: video.creator
 	};
-	const db = get_db(locals.DB);
 
-	const insert_video = await db.insert(videos_table).values(video);
-	const insert_post = await db.insert(posts_table).values(post);
-	if (insert_video.error || insert_post.error) return error(500);
+	const insert_video = await db.insert(videosTable).values(video);
+	const insert_post = await db.insert(postsTable).values(post);
+	// TODO: better error handling
+	if (!insert_video || !insert_post) return error(500);
 
 	return json(validated_input);
 }

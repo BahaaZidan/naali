@@ -1,62 +1,78 @@
-import { integer, real, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import {
+	timestamp,
+	pgTable,
+	text,
+	primaryKey,
+	integer,
+	real,
+	uniqueIndex
+} from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 import { sql } from 'drizzle-orm';
 
-export const usersTable = sqliteTable('users', {
+export const usersTable = pgTable('user', {
 	id: text('id').notNull().primaryKey(),
 	name: text('name'),
 	email: text('email').notNull(),
-	emailVerified: integer('emailVerified', { mode: 'timestamp_ms' }),
+	emailVerified: timestamp('emailVerified', { mode: 'date' }),
 	image: text('image')
 });
 
-export const accountsTable = sqliteTable('accounts', {
-	id: text('id').notNull().primaryKey(),
-	userId: text('userId')
-		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	type: text('type').$type<AdapterAccount['type']>().notNull(),
-	provider: text('provider').notNull(),
-	providerAccountId: text('providerAccountId').notNull(),
-	refresh_token: text('refresh_token'),
-	access_token: text('access_token'),
-	expires_at: integer('expires_at'),
-	token_type: text('token_type'),
-	scope: text('scope'),
-	id_token: text('id_token'),
-	session_state: text('session_state'),
-	oauth_token_secret: text('oauth_token_secret'),
-	oauth_token: text('oauth_token')
-});
+export const accountsTable = pgTable(
+	'account',
+	{
+		userId: text('userId')
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		type: text('type').$type<AdapterAccount['type']>().notNull(),
+		provider: text('provider').notNull(),
+		providerAccountId: text('providerAccountId').notNull(),
+		refresh_token: text('refresh_token'),
+		access_token: text('access_token'),
+		expires_at: integer('expires_at'),
+		token_type: text('token_type'),
+		scope: text('scope'),
+		id_token: text('id_token'),
+		session_state: text('session_state')
+	},
+	(account) => ({
+		compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] })
+	})
+);
 
-export const sessionsTable = sqliteTable('sessions', {
-	id: text('id').notNull(),
+export const sessionsTable = pgTable('session', {
 	sessionToken: text('sessionToken').notNull().primaryKey(),
 	userId: text('userId')
 		.notNull()
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	expires: integer('expires', { mode: 'timestamp_ms' }).notNull()
+	expires: timestamp('expires', { mode: 'date' }).notNull()
 });
 
-export const verificationTokensTable = sqliteTable('verification_tokens', {
-	identifier: text('identifier').notNull(),
-	token: text('token').notNull().primaryKey(),
-	expires: integer('expires', { mode: 'timestamp_ms' }).notNull()
-});
+export const verificationTokensTable = pgTable(
+	'verificationToken',
+	{
+		identifier: text('identifier').notNull(),
+		token: text('token').notNull(),
+		expires: timestamp('expires', { mode: 'date' }).notNull()
+	},
+	(vt) => ({
+		compoundKey: primaryKey({ columns: [vt.identifier, vt.token] })
+	})
+);
 
-export const videos_table = sqliteTable('videos', {
+export const videosTable = pgTable('videos', {
 	id: text('id').primaryKey(),
+	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 	creator: text('creator')
 		.notNull()
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
 	name: text('name').notNull(),
 	description: text('description'),
-	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-	publish_status: text('publish_status', { enum: ['public', 'private'] }).default('public'),
+	publishStatus: text('publishStatus', { enum: ['public', 'private'] }).default('public'),
 	duration: real('duration').notNull().default(0)
 });
 
-export const posts_table = sqliteTable('posts', {
+export const postsTable = pgTable('posts', {
 	id: text('id').primaryKey(),
 	created_at: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 	type: text('type', { enum: ['video'] }).default('video'),
@@ -64,12 +80,12 @@ export const posts_table = sqliteTable('posts', {
 	creator: text('creator')
 		.notNull()
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	video_id: text('video_id')
+	videoId: text('videoId')
 		.notNull()
-		.references(() => videos_table.id, { onDelete: 'cascade' })
+		.references(() => videosTable.id, { onDelete: 'cascade' })
 });
 
-export const follows_table = sqliteTable(
+export const followsTable = pgTable(
 	'follows',
 	{
 		follower: text('follower')

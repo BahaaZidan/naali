@@ -1,11 +1,10 @@
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
-import { get_db } from '$lib/db';
-import { videos_table } from '$lib/db/schema';
+import { videosTable } from '$lib/db/schema';
 import { error } from '@sveltejs/kit';
 import { and, eq, or } from 'drizzle-orm';
+import { db } from '$lib/db';
 
 export const load = async ({ params, locals }) => {
-	const db = get_db(locals.DB);
 
 	const logged_user_id = (await locals.getSession())?.user?.id;
 
@@ -14,11 +13,11 @@ export const load = async ({ params, locals }) => {
 
 	const result = await db
 		.select()
-		.from(videos_table)
+		.from(videosTable)
 		.where(
 			and(
-				eq(videos_table.id, params.video_id),
-				or(eq(videos_table.publish_status, 'public'), eq(videos_table.creator, logged_user_id))
+				eq(videosTable.id, params.video_id),
+				or(eq(videosTable.publishStatus, 'public'), eq(videosTable.creator, logged_user_id))
 			)
 		)
 		.limit(1);

@@ -1,8 +1,8 @@
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
-import { get_db } from '$lib/db';
-import { follows_table, usersTable, videos_table } from '$lib/db/schema';
+import { followsTable, usersTable, videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
+import { db } from '$lib/db';
 
 export const actions = {
 	publish: async ({ locals, request }) => {
@@ -17,17 +17,16 @@ export const actions = {
 		}
 		const description = formData.get('description')?.toString();
 
-		const db = get_db(locals.DB);
 
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
 		const update = await db
-			.update(videos_table)
-			.set({ name, description, publish_status: 'public' })
-			.where(and(eq(videos_table.id, id), eq(videos_table.creator, logged_in_user_id)));
-		if (!update.success) return fail(500);
+			.update(videosTable)
+			.set({ name, description, publishStatus: 'public' })
+			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
+		if (!update) return fail(500);
 
 		return { success: true };
 	},
@@ -43,11 +42,10 @@ export const actions = {
 		if (!logged_in_user_id) return fail(401);
 		if (id === logged_in_user_id) return fail(400, { id, incorrect: true });
 
-		const db = get_db(locals.DB);
 		const insert = await db
-			.insert(follows_table)
+			.insert(followsTable)
 			.values({ follower: logged_in_user_id, followed: id });
-		if (!insert.success) return fail(500);
+		if (!insert) return fail(500);
 
 		return { success: true };
 	},
@@ -62,18 +60,16 @@ export const actions = {
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
-		const db = get_db(locals.DB);
 		const deletion = await db
-			.delete(follows_table)
-			.where(and(eq(follows_table.follower, logged_in_user_id), eq(follows_table.followed, id)));
-		if (!deletion.success) return fail(500);
+			.delete(followsTable)
+			.where(and(eq(followsTable.follower, logged_in_user_id), eq(followsTable.followed, id)));
+		if (!deletion) return fail(500);
 
 		return { success: true };
 	}
 };
 
 export const load = async ({ params, locals }) => {
-	const db = get_db(locals.DB);
 	const user_id = params.user_id;
 	const user = (await db.select().from(usersTable).where(eq(usersTable.id, user_id)).limit(1))[0];
 
@@ -83,11 +79,11 @@ export const load = async ({ params, locals }) => {
 	const is_own_profile = logged_in_user_id === user_id;
 	const videos_result = await db
 		.select()
-		.from(videos_table)
+		.from(videosTable)
 		.where(
 			is_own_profile
-				? eq(videos_table.creator, user_id)
-				: and(eq(videos_table.creator, user_id), eq(videos_table.publish_status, 'public'))
+				? eq(videosTable.creator, user_id)
+				: and(eq(videosTable.creator, user_id), eq(videosTable.publishStatus, 'public'))
 		);
 	const videos = videos_result.map((v) => ({
 		...v,
@@ -96,11 +92,11 @@ export const load = async ({ params, locals }) => {
 
 	const follows = logged_in_user_id
 		? await db
-				.select()
-				.from(follows_table)
-				.where(
-					and(eq(follows_table.follower, logged_in_user_id), eq(follows_table.followed, user_id))
-				)
+			.select()
+			.from(followsTable)
+			.where(
+				and(eq(followsTable.follower, logged_in_user_id), eq(followsTable.followed, user_id))
+			)
 		: null;
 	const is_followed = follows && follows.length > 0;
 

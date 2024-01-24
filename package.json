@@ -14,9 +14,9 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"db:generate": "drizzle-kit generate:sqlite",
-		"db:push_local": "wrangler d1 execute naali --local",
-		"db:push_remote": "wrangler d1 execute naali"
+		"db:push": "drizzle-kit push:pg",
+		"db:generate": "drizzle-kit generate:pg",
+		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@iconify-json/tabler": "^1.1.104",
@@ -29,7 +29,7 @@
 		"autoprefixer": "^10.4.16",
 		"daisyui": "^4.4.4",
 		"dotenv": "^16.3.1",
-		"drizzle-kit": "^0.20.6",
+		"drizzle-kit": "^0.20.13",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-svelte": "^2.30.0",
@@ -51,12 +51,15 @@
 	"type": "module",
 	"dependencies": {
 		"@auth/core": "^0.18.3",
+		"@auth/drizzle-adapter": "^0.3.16",
 		"@auth/sveltekit": "^0.5.0",
 		"@uppy/core": "^3.8.0",
 		"@uppy/dashboard": "^3.7.1",
 		"@uppy/tus": "^3.5.0",
 		"date-fns": "^3.2.0",
 		"drizzle-orm": "^0.29.0",
+		"pg": "^8.11.3",
+		"postgres": "^3.4.3",
 		"valibot": "^0.25.0"
 	}
 }

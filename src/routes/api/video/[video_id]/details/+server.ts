@@ -1,5 +1,4 @@
 import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/private';
-import type { Result, VideoDetails } from '$lib/types/cloudflare';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET({ locals, params }) {
@@ -16,7 +15,7 @@ export async function GET({ locals, params }) {
 		}
 	});
 
-	const video_details = await response.json<Result<VideoDetails>>();
+	const video_details = await response.json();
 	if (!video_details.success) return error(500);
 
 	return json({

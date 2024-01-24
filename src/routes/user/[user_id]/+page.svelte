@@ -3,8 +3,8 @@
 
 	export let data;
 	const videos = data.videos;
-	const private_videos = videos.filter((v) => v.publish_status === 'private');
-	const public_videos = videos.filter((v) => v.publish_status === 'public');
+	const private_videos = videos.filter((v) => v.publishStatus === 'private');
+	const public_videos = videos.filter((v) => v.publishStatus === 'public');
 	const user = data.user;
 	const is_own_profile = data.is_own_profile;
 </script>

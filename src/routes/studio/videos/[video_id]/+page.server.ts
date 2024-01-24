@@ -1,8 +1,8 @@
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
-import { get_db } from '$lib/db';
-import { videos_table } from '$lib/db/schema';
+import { videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
+import { db } from '$lib/db';
 
 export const actions = {
 	default: async ({ locals, request }) => {
@@ -28,32 +28,31 @@ export const actions = {
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
-		const db = get_db(locals.DB);
 		const update = await db
-			.update(videos_table)
+			.update(videosTable)
 			.set({
 				name,
 				description,
-				// @ts-expect-error check on line 22 should be enough but ts can't narrow down the type from it.
-				publish_status
+				// @ts-expect-error TODO: better form validation will fix the typing
+				publishStatus: publish_status
 			})
-			.where(and(eq(videos_table.id, id), eq(videos_table.creator, logged_in_user_id)));
-		if (!update.success) return fail(500);
+			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
+		// TODO: better error detection
+		if (!update) return fail(500);
 
 		return { success: true };
 	}
 };
 
 export const load = async ({ params, locals }) => {
-	const db = get_db(locals.DB);
 
 	const logged_user_id = (await locals.getSession())?.user?.id;
 	if (!logged_user_id) return error(404);
 
 	const result = await db
 		.select()
-		.from(videos_table)
-		.where(and(eq(videos_table.id, params.video_id), eq(videos_table.creator, logged_user_id)))
+		.from(videosTable)
+		.where(and(eq(videosTable.id, params.video_id), eq(videosTable.creator, logged_user_id)))
 		.limit(1);
 	const video = result[0];
 	if (!video) return error(404);

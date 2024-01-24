@@ -1,4 +1,3 @@
-import { connectD1 } from 'wrangler-proxy';
 import { SvelteKitAuth } from '@auth/sveltekit';
 import GitHub from '@auth/core/providers/github';
 import Google from '@auth/core/providers/google';
@@ -10,10 +9,10 @@ import {
 	GOOGLE_CLIENT_SECRET
 } from '$env/static/private';
 import type { Handle } from '@sveltejs/kit';
-import { D1Adapter } from '$lib/db/d1_adapter';
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { db } from '$lib/db';
 
-export const handle = SvelteKitAuth(async (event) => {
-	event.locals.DB = event.platform?.env?.DB ?? connectD1('DB');
+export const handle = SvelteKitAuth(async () => {
 	return {
 		providers: [
 			GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
@@ -21,7 +20,7 @@ export const handle = SvelteKitAuth(async (event) => {
 		],
 		secret: AUTH_SECRET,
 		trustHost: true,
-		adapter: D1Adapter(event.locals.DB),
+		adapter: DrizzleAdapter(db),
 		callbacks: {
 			session: async ({
 				session,

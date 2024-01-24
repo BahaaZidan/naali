@@ -1,9 +1,9 @@
 import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/private';
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
-import { get_db } from '$lib/db';
-import { videos_table } from '$lib/db/schema';
+import { videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
+import { db } from '$lib/db';
 
 export const actions = {
 	delete: async ({ locals, request }) => {
@@ -17,11 +17,10 @@ export const actions = {
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
-		const db = get_db(locals.DB);
 		const deletion = await db
-			.delete(videos_table)
-			.where(and(eq(videos_table.id, id), eq(videos_table.creator, logged_in_user_id)));
-		if (!deletion.success) return fail(500);
+			.delete(videosTable)
+			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
+		if (!deletion) return fail(500);
 
 		const endpoint = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream/${id}`;
 		const response = await fetch(endpoint, {
@@ -42,12 +41,11 @@ export const load = async ({ locals }) => {
 	const user = session?.user;
 	if (!user?.id) return error(401);
 
-	const db = get_db(locals.DB);
 
 	const videos_result = await db
 		.select()
-		.from(videos_table)
-		.where(eq(videos_table.creator, user.id));
+		.from(videosTable)
+		.where(eq(videosTable.creator, user.id));
 
 	const videos = videos_result.map((v) => ({
 		...v,
