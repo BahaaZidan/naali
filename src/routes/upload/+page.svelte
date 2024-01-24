@@ -122,7 +122,7 @@
 <div id="uppy-dashboard"></div>
 <dialog id="processing_modal" class="modal">
 	<div class="modal-box">
-		<h3 class="text-lg font-bold">We're preparing the video for streaming</h3>
+		<h3 class="text-lg font-bold">We're preparing your video for streaming</h3>
 		<ul class="steps steps-vertical">
 			<li
 				class="step"
