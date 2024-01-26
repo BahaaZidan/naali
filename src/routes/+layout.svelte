@@ -11,7 +11,7 @@
 			document.documentElement.style.setProperty('--nav-height', `${navbarElement}px`);
 	});
 
-	let searchValue = '';
+	let searchValue = $page.url.pathname.includes('/result/') ? decodeURI($page.url.pathname.split('/')[2]) : '';
 
 	function handleSearch() {
 		if (searchValue)
