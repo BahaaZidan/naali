@@ -5,10 +5,9 @@ import {
 	primaryKey,
 	integer,
 	real,
-	uniqueIndex
+	uniqueIndex, pgEnum
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from '@auth/core/adapters';
-import { sql } from 'drizzle-orm';
 
 export const usersTable = pgTable('user', {
 	id: text('id').notNull().primaryKey(),
@@ -60,6 +59,8 @@ export const verificationTokensTable = pgTable(
 	})
 );
 
+export const privacyEnum = pgEnum('privacy', ['public', 'private']);
+
 export const videosTable = pgTable('videos', {
 	id: text('id').primaryKey(),
 	createdAt: timestamp('createdAt').defaultNow(),
@@ -68,7 +69,7 @@ export const videosTable = pgTable('videos', {
 		.references(() => usersTable.id, { onDelete: 'cascade' }),
 	name: text('name').notNull(),
 	description: text('description'),
-	publishStatus: text('publishStatus', { enum: ['public', 'private'] }).default('public'),
+	privacy: privacyEnum('privacy').default('public'),
 	duration: real('duration').notNull().default(0)
 });
 

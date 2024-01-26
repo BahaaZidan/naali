@@ -17,7 +17,7 @@ export const load = async ({ params, locals }) => {
 		.where(
 			and(
 				eq(videosTable.id, params.video_id),
-				or(eq(videosTable.publishStatus, 'public'), eq(videosTable.creator, logged_user_id))
+				or(eq(videosTable.privacy, 'public'), eq(videosTable.creator, logged_user_id))
 			)
 		)
 		.limit(1);

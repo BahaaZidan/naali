@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { parseIsoDurationString } from '$lib/utils/date';
-	import { formatDistance, formatDuration, formatISODuration } from 'date-fns';
+	import { formatDistance, formatISODuration } from 'date-fns';
 	import type { MouseEventHandler } from 'svelte/elements';
 
 	export let id: string;

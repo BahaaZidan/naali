@@ -24,7 +24,7 @@ export const actions = {
 
 		const update = await db
 			.update(videosTable)
-			.set({ name, description, publishStatus: 'public' })
+			.set({ name, description, privacy: 'public' })
 			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
 		if (!update) return fail(500);
 
@@ -83,7 +83,7 @@ export const load = async ({ params, locals }) => {
 		.where(
 			is_own_profile
 				? eq(videosTable.creator, user_id)
-				: and(eq(videosTable.creator, user_id), eq(videosTable.publishStatus, 'public'))
+				: and(eq(videosTable.creator, user_id), eq(videosTable.privacy, 'public'))
 		);
 	const videos = videos_result.map((v) => ({
 		...v,

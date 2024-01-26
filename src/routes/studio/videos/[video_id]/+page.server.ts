@@ -34,7 +34,7 @@ export const actions = {
 				name,
 				description,
 				// @ts-expect-error TODO: better form validation will fix the typing
-				publishStatus: publish_status
+				privacy: publish_status
 			})
 			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
 		// TODO: better error detection

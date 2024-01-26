@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TablerDotsVertical from 'virtual:icons/tabler/dots-vertical';
+	import { format } from 'date-fns';
 
 	export let data;
 </script>
@@ -22,8 +23,12 @@
 				<img src={video.thumbnail} alt="thumbnail" class="h-16 w-28 object-contain" />
 			</td>
 			<td>{video.name}</td>
-			<td>{video.createdAt}</td>
-			<td>{video.publishStatus}</td>
+			{#if video.createdAt}
+				<td>{format(video.createdAt, "MM/dd/yyyy")}</td>
+			{:else}
+				<td></td>
+			{/if}
+			<td>{video.privacy}</td>
 			<td class="p-0 px-3">
 				<div class="dropdown">
 					<div tabindex="0" role="button" class="btn btn-ghost">
