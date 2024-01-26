@@ -37,7 +37,10 @@
 	</div>
 	<div class="flex flex-1 justify-center">
 		<input type="text" placeholder="Search"
-					 class="input input-bordered w-full max-w-md rounded-e-none focus:outline-none" bind:value={searchValue} />
+					 class="input input-bordered w-full max-w-md rounded-e-none focus:outline-none" bind:value={searchValue}
+					 on:keypress={(e) => {
+						 if (e.key === 'Enter') handleSearch();
+					 }} />
 		<button class="btn btn-neutral rounded-s-none" on:click={handleSearch}>
 			<SearchIcon />
 		</button>
