@@ -31,7 +31,7 @@
 						<button class="btn btn-sm" type="submit">Follow</button>
 					</form>
 				{/if}
-				<button class="btn btn-sm">Support</button>
+				<button class="btn btn-sm">Sponsor</button>
 			</div>
 		{:else}
 			<div class="flex gap-2">
