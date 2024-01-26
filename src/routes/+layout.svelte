@@ -3,12 +3,20 @@
 	import { signOut } from '@auth/sveltekit/client';
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import SearchIcon from 'virtual:icons/tabler/search';
 
 	onMount(() => {
 		const navbarElement = document.getElementById('main-navbar')?.offsetHeight;
 		if (navbarElement)
 			document.documentElement.style.setProperty('--nav-height', `${navbarElement}px`);
 	});
+
+	let searchValue = '';
+
+	function handleSearch() {
+		if (searchValue)
+			window.location.href = `/result/${searchValue}`;
+	}
 </script>
 
 {#if $navigating}
@@ -28,8 +36,11 @@
 		>
 	</div>
 	<div class="flex flex-1 justify-center">
-		<input type="text" placeholder="Search" class="input input-bordered w-full max-w-md" />
-		<button></button>
+		<input type="text" placeholder="Search"
+					 class="input input-bordered w-full max-w-md rounded-e-none focus:outline-none" bind:value={searchValue} />
+		<button class="btn btn-neutral rounded-s-none" on:click={handleSearch}>
+			<SearchIcon />
+		</button>
 	</div>
 	<div class="flex flex-none gap-4 pr-3">
 		{#if $page.data.session?.user}
@@ -54,7 +65,9 @@
 					</li>
 					<li><a class="link-hover" href="/studio">Settings</a></li>
 					<div class="divider m-0"></div>
-					<li><button class="link-hover" on:click={() => signOut()}>Logout</button></li>
+					<li>
+						<button class="link-hover" on:click={() => signOut()}>Logout</button>
+					</li>
 				</ul>
 			</div>
 		{:else}
