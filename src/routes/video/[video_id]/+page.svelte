@@ -1,11 +1,14 @@
 <script lang="ts">
 	import ThumbUpIcon from 'virtual:icons/tabler/thumb-up';
+	import ThumbUpFilledIcon from 'virtual:icons/tabler/thumb-up-filled';
 	import ThumbDownIcon from 'virtual:icons/tabler/thumb-down';
+	import ThumbDownFilledIcon from 'virtual:icons/tabler/thumb-down-filled';
 	import ShareIcon from 'virtual:icons/tabler/share';
 	import SendIcon from 'virtual:icons/tabler/send';
+	import { enhance } from '$app/forms';
 
 	export let data;
-	const video = data.video;
+	$: ({ video } = data);
 </script>
 
 <main>
@@ -39,13 +42,29 @@
 				{/if}
 			</div>
 			<div class="flex gap-2">
-				<div class="join">
-					<button class="btn join-item" disabled={video.isOwn}>
-						<ThumbUpIcon class="size-5" />
-					</button>
-					<button class="btn join-item" disabled={video.isOwn}>
-						<ThumbDownIcon class="size-5" />
-					</button>
+				<div class="flex">
+					<form method="post" action="?/like" use:enhance>
+						<input type="hidden" value={video.id} name="id" />
+						<input type="hidden" value={video.like === true ? 'delete' : 'true'} name="value" />
+						<button class="btn rounded-e-none" type="submit" disabled={video.isOwn}>
+							{#if video.like === true}
+								<ThumbUpFilledIcon class="size-5" />
+							{:else}
+								<ThumbUpIcon class="size-5" />
+							{/if}
+						</button>
+					</form>
+					<form method="post" action="?/like" use:enhance>
+						<input type="hidden" value={video.id} name="id" />
+						<input type="hidden" value={video.like === false ? 'delete' : 'false'} name="value" />
+						<button class="btn rounded-s-none" type="submit" disabled={video.isOwn}>
+							{#if video.like === false}
+								<ThumbDownFilledIcon class="size-5" />
+							{:else}
+								<ThumbDownIcon class="size-5" />
+							{/if}
+						</button>
+					</form>
 				</div>
 				<button class="btn">
 					<ShareIcon class="size-5" />
