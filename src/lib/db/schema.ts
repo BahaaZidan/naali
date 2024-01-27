@@ -5,7 +5,9 @@ import {
 	primaryKey,
 	integer,
 	real,
-	uniqueIndex, pgEnum
+	uniqueIndex,
+	pgEnum,
+	boolean
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 
@@ -98,5 +100,21 @@ export const followsTable = pgTable(
 	},
 	(t) => ({
 		unq: uniqueIndex('follower_followed').on(t.follower, t.followed)
+	})
+);
+
+export const likesTable = pgTable(
+	'likes',
+	{
+		liker: text('liker')
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		videoId: text('videoId')
+			.notNull()
+			.references(() => videosTable.id, { onDelete: 'cascade' }),
+		value: boolean('value').notNull()
+	},
+	(t) => ({
+		compoundKey: primaryKey({ columns: [t.liker, t.videoId] })
 	})
 );

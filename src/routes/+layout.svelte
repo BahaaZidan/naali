@@ -11,11 +11,12 @@
 			document.documentElement.style.setProperty('--nav-height', `${navbarElement}px`);
 	});
 
-	let searchValue = $page.url.pathname.includes('/result/') ? decodeURI($page.url.pathname.split('/')[2]) : '';
+	let searchValue = $page.url.pathname.includes('/result/')
+		? decodeURI($page.url.pathname.split('/')[2])
+		: '';
 
 	function handleSearch() {
-		if (searchValue)
-			window.location.href = `/result/${searchValue}`;
+		if (searchValue) window.location.href = `/result/${searchValue}`;
 	}
 </script>
 
@@ -35,13 +36,17 @@
 			aria-current={$page.url.pathname === '/'}>naali</a
 		>
 	</div>
-	<div class="flex flex-1 justify-center">
-		<input type="text" placeholder="Search"
-					 class="input input-bordered w-full max-w-md rounded-e-none focus:outline-none" bind:value={searchValue}
-					 on:keypress={(e) => {
-						 if (e.key === 'Enter') handleSearch();
-					 }} />
-		<button class="btn btn-neutral rounded-s-none" on:click={handleSearch}>
+	<div class="join flex flex-1 justify-center">
+		<input
+			type="text"
+			placeholder="Search"
+			class="input join-item input-bordered w-full max-w-md focus:outline-none"
+			bind:value={searchValue}
+			on:keypress={(e) => {
+				if (e.key === 'Enter') handleSearch();
+			}}
+		/>
+		<button class="btn join-item btn-neutral" on:click={handleSearch}>
 			<SearchIcon />
 		</button>
 	</div>
