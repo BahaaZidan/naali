@@ -8,8 +8,8 @@
 	const video = data.video;
 </script>
 
-<main class="h-screen">
-	<div class="h-[65%] min-h-[400px] w-full">
+<main>
+	<div class="h-[63vh] min-h-[400px] w-full">
 		<iframe
 			title="video"
 			src={video.stream_url}
