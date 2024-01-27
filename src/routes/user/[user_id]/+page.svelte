@@ -1,12 +1,13 @@
 <script lang="ts">
 	import VideoCard from '$lib/components/video-card.svelte';
+	import { enhance } from '$app/forms';
 
 	export let data;
-	const videos = data.videos;
-	const private_videos = videos.filter((v) => v.privacy === 'private');
-	const public_videos = videos.filter((v) => v.privacy === 'public');
-	const user = data.user;
-	const is_own_profile = data.is_own_profile;
+	$: videos = data.videos;
+	$: private_videos = videos.filter((v) => v.privacy === 'private');
+	$: public_videos = videos.filter((v) => v.privacy === 'public');
+	$: user = data.user;
+	$: is_own_profile = data.is_own_profile;
 </script>
 
 <div class="flex w-full gap-3 p-3">
@@ -21,12 +22,12 @@
 		{#if !is_own_profile}
 			<div class="flex gap-2">
 				{#if data.is_followed}
-					<form method="post" action="?/unfollow">
+					<form method="post" action="?/unfollow" use:enhance>
 						<input type="hidden" value={user.id} name="id" />
 						<button class="btn btn-sm" type="submit">Unfollow</button>
 					</form>
 				{:else}
-					<form method="post" action="?/follow">
+					<form method="post" action="?/follow" use:enhance>
 						<input type="hidden" value={user.id} name="id" />
 						<button class="btn btn-sm" type="submit">Follow</button>
 					</form>

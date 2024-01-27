@@ -1,13 +1,18 @@
 <script lang="ts">
 	import ArrowLeftIcon from 'virtual:icons/tabler/arrow-left';
+	import { enhance } from '$app/forms';
+
 	export let data;
 </script>
 
 <div class="breadcrumbs text-sm">
-	<a class="btn btn-ghost btn-md" href="/studio/videos"><ArrowLeftIcon />Back</a>
+	<a class="btn btn-ghost btn-md" href="/studio/videos">
+		<ArrowLeftIcon />
+		Back</a
+	>
 </div>
 <h1 class="text-3xl">Video details</h1>
-<form method="POST" class="flex w-full flex-col gap-4">
+<form method="POST" class="flex w-full flex-col gap-4" use:enhance>
 	<input name="id" type="hidden" value={data.video.id} />
 	<label class="w-full">
 		<div class="label">
@@ -38,7 +43,7 @@
 		<select
 			class="select select-bordered w-full max-w-lg"
 			name="publish_status"
-			value={data.video.publish_status}
+			value={data.video.privacy}
 		>
 			<option value="private">Private</option>
 			<option value="public">Public</option>
