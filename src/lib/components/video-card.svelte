@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { parseIsoDurationString } from '$lib/utils/date';
 	import { formatDistance, formatISODuration } from 'date-fns';
-	import type { MouseEventHandler } from 'svelte/elements';
 
 	export let id: string;
 	export let name: string;
 	export let thumbnail: string;
 	export let duration: number;
 	export let createdAt: Date | undefined | null;
-	export let is_private: boolean | undefined = undefined;
-	export let on_publish_click: MouseEventHandler<HTMLButtonElement> | undefined = undefined;
 
 	function formatSeconds(seconds: number) {
 		const isoDuration = formatISODuration({ seconds });
@@ -45,11 +42,6 @@
 		</div> -->
 		{#if createdAt}
 			<div class="text-gray-400">{formatDistance(createdAt, new Date(), { addSuffix: true })}</div>
-		{/if}
-		{#if is_private}
-			<button on:click|stopPropagation|preventDefault={on_publish_click} class="btn btn-sm mt-2">
-				PUBLISH
-			</button>
 		{/if}
 		<!-- <div
 			class="mt-1 w-max rounded-sm border border-red-500 px-1 py-0.5 text-xs font-bold tracking-wide text-red-600"

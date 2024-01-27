@@ -13,7 +13,6 @@
 			<th>Thumbnail</th>
 			<th>Name</th>
 			<th>Uploaded at</th>
-			<th>Status</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -29,7 +28,6 @@
 				{:else}
 					<td></td>
 				{/if}
-				<td>{video.privacy}</td>
 				<td class="p-0 px-3">
 					<div class="dropdown">
 						<div tabindex="0" role="button" class="btn btn-ghost">

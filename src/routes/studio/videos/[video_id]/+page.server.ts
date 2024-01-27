@@ -15,13 +15,6 @@ export const actions = {
 		if (!id) {
 			return fail(400, { id, missing: true });
 		}
-		const publish_status = formData.get('publish_status')?.toString();
-		if (!publish_status) {
-			return fail(400, { publish_status, missing: true });
-		}
-		if (!['public', 'private'].includes(publish_status)) {
-			return fail(400, { publish_status, incorrect: true });
-		}
 		const description = formData.get('description')?.toString();
 
 		const session = await locals.getSession();
@@ -32,9 +25,7 @@ export const actions = {
 			.update(videosTable)
 			.set({
 				name,
-				description,
-				// @ts-expect-error TODO: better form validation will fix the typing
-				privacy: publish_status
+				description
 			})
 			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
 		// TODO: better error detection
@@ -45,7 +36,6 @@ export const actions = {
 };
 
 export const load = async ({ params, locals }) => {
-
 	const logged_user_id = (await locals.getSession())?.user?.id;
 	if (!logged_user_id) return error(404);
 

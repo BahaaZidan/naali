@@ -36,19 +36,5 @@
 		/>
 	</label>
 
-	<label class="w-full">
-		<div class="label">
-			<span class="label-text">Visibility</span>
-		</div>
-		<select
-			class="select select-bordered w-full max-w-lg"
-			name="publish_status"
-			value={data.video.privacy}
-		>
-			<option value="private">Private</option>
-			<option value="public">Public</option>
-		</select>
-	</label>
-
 	<button type="submit" class="btn btn-primary btn-block max-w-lg">Save changes</button>
 </form>
