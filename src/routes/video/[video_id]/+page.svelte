@@ -31,15 +31,19 @@
 					<div class="line-clamp-1 text-lg">{video.creator.name}</div>
 					<div class="line-clamp-1 text-xs">1,000 Followers</div>
 				</div>
-				<button class="btn">Follow</button>
-				<button class="btn">Sponsor</button>
+				{#if video.isOwn}
+					<a href="/studio/videos/{video.id}" class="btn">Edit video</a>
+				{:else}
+					<button class="btn">Follow</button>
+					<button class="btn">Sponsor</button>
+				{/if}
 			</div>
 			<div class="flex gap-2">
 				<div class="join">
-					<button class="btn join-item">
+					<button class="btn join-item" disabled={video.isOwn}>
 						<ThumbUpIcon class="size-5" />
 					</button>
-					<button class="btn join-item">
+					<button class="btn join-item" disabled={video.isOwn}>
 						<ThumbDownIcon class="size-5" />
 					</button>
 				</div>

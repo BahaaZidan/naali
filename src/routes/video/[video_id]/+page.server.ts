@@ -27,6 +27,7 @@ export const load = async ({ params, locals }) => {
 	return {
 		video: {
 			...video.videos,
+			isOwn: logged_user_id === video.videos.creator,
 			creator: video.user,
 			stream_url: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${video.videos.id}/iframe`
 		}
