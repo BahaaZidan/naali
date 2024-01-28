@@ -1,12 +1,20 @@
 <script lang="ts">
 	import VideoCard from '$lib/components/video-card.svelte';
 	import { enhance } from '$app/forms';
+	import InfoCircleIcon from 'virtual:icons/tabler/info-circle';
 
 	export let data;
 	$: videos = data.videos;
 	$: user = data.user;
 	$: is_own_profile = data.is_own_profile;
 </script>
+
+{#if !user.handle}
+	<div role="alert" class="alert">
+		<InfoCircleIcon />
+		<span>You need to set your @handle in <a href="/studio" class="link-hover">settings.</a></span>
+	</div>
+{/if}
 
 <div class="flex w-full gap-3 p-3">
 	<div class="avatar">
@@ -16,7 +24,7 @@
 	</div>
 	<div class="flex flex-col gap-1">
 		<p class="font-bold">{user.name}</p>
-		<p>{user.email}</p>
+		{#if user.handle}<p>@{user.handle}</p>{/if}
 		{#if !is_own_profile}
 			<div class="flex gap-2">
 				{#if data.is_followed}
