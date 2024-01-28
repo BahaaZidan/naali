@@ -1,7 +1,7 @@
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
 import { followsTable, usersTable, videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 
 export const actions = {
@@ -76,7 +76,11 @@ export const load = async ({ params, locals }) => {
 
 	const logged_in_user_id = (await locals.getSession())?.user?.id;
 	const is_own_profile = logged_in_user_id === user_id;
-	const videos_result = await db.select().from(videosTable).where(eq(videosTable.creator, user_id));
+	const videos_result = await db
+		.select()
+		.from(videosTable)
+		.where(eq(videosTable.creator, user_id))
+		.orderBy(desc(videosTable.createdAt));
 	const videos = videos_result.map((v) => ({
 		...v,
 		thumbnail: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${v.id}/thumbnails/thumbnail.jpg`

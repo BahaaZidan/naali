@@ -1,6 +1,6 @@
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
 import { followsTable, postsTable, usersTable, videosTable } from '$lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 import { alias } from 'drizzle-orm/pg-core';
 
@@ -19,7 +19,8 @@ export const load = async ({ locals }) => {
 		.rightJoin(videosTable, eq(videosTable.id, postsTable.videoId))
 		.rightJoin(postCreator, eq(postCreator.id, postsTable.creator))
 		.rightJoin(videoCreator, eq(videoCreator.id, videosTable.creator))
-		.where(eq(followsTable.follower, logged_in_user_id));
+		.where(eq(followsTable.follower, logged_in_user_id))
+		.orderBy(desc(postsTable.createdAt));
 
 	const posts = postsResult.map((p) => ({
 		id: p.posts?.id,

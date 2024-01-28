@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { parseIsoDurationString } from '$lib/utils/date';
-	import { formatDistance, formatISODuration } from 'date-fns';
+	import { formatDistanceToNow, formatISODuration } from 'date-fns';
 
 	export let id: string;
 	export let name: string;
@@ -41,7 +41,7 @@
 			</div>
 		</div> -->
 		{#if createdAt}
-			<div class="text-gray-400">{formatDistance(createdAt, new Date(), { addSuffix: true })}</div>
+			<div class="text-gray-400">{formatDistanceToNow(createdAt, { addSuffix: true })}</div>
 		{/if}
 		<!-- <div
 			class="mt-1 w-max rounded-sm border border-red-500 px-1 py-0.5 text-xs font-bold tracking-wide text-red-600"

@@ -2,7 +2,7 @@ import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
 import { videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 
 export const actions = {
@@ -41,11 +41,11 @@ export const load = async ({ locals }) => {
 	const user = session?.user;
 	if (!user?.id) return error(401);
 
-
 	const videos_result = await db
 		.select()
 		.from(videosTable)
-		.where(eq(videosTable.creator, user.id));
+		.where(eq(videosTable.creator, user.id))
+		.orderBy(desc(videosTable.createdAt));
 
 	const videos = videos_result.map((v) => ({
 		...v,
