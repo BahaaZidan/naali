@@ -128,10 +128,18 @@
 				class="step"
 				class:step-primary={status === 'queued' || status === 'inprogress' || status === 'ready'}
 			>
-				Queued
+				<div class="flex gap-2">
+					Queued
+					{#if status === 'queued'}<span class="loading loading-spinner loading-md"></span>
+					{/if}
+				</div>
 			</li>
 			<li class="step" class:step-primary={status === 'inprogress' || status === 'ready'}>
-				In progress
+				<div class="flex gap-2">
+					In progress
+					{#if status === 'inprogress'}<span class="loading loading-spinner loading-md"></span>
+					{/if}
+				</div>
 			</li>
 			{#if status === 'error'}
 				<li class="step" class:step-error={status === 'error'}>Error</li>
