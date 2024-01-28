@@ -4,14 +4,17 @@ import { videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
+import * as v from 'valibot';
 
 export const actions = {
 	delete: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
+		const idInput = formData.get('id')?.toString();
+		const parsedInput = v.safeParse(v.string([v.minLength(1), v.maxLength(32)]), idInput);
+		if (!parsedInput.success) {
+			return fail(400, v.flatten(parsedInput.error));
 		}
+		const id = parsedInput.output;
 
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;

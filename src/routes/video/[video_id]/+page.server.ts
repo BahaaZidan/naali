@@ -3,6 +3,7 @@ import { likesTable, usersTable, videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
+import * as v from 'valibot';
 
 export const load = async ({ params, locals }) => {
 	const logged_user_id = (await locals.getSession())?.user?.id;
@@ -37,14 +38,16 @@ export const load = async ({ params, locals }) => {
 export const actions = {
 	like: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
+		const schema = v.object({
+			id: v.string([v.minLength(1), v.maxLength(32)]),
+			value: v.picklist(['delete', 'true', 'false'])
+		});
+		const inputValidation = v.safeParse(schema, Object.fromEntries(formData.entries()));
+		if (!inputValidation.success) {
+			return fail(400, v.flatten(inputValidation.error));
 		}
-		const valueString = formData.get('value')?.toString();
-		if (!valueString) {
-			return fail(400, { value: valueString, missing: true });
-		}
+
+		const { id, value: valueString } = inputValidation.output;
 
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;

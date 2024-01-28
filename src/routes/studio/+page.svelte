@@ -37,8 +37,8 @@
 				name="handle"
 				type="text"
 				class="input input-bordered w-full max-w-lg"
-				class:input-error={!!errors?.handle?.length}
 				bind:value={user.handle}
+				class:input-error={!!errors?.handle?.length}
 				required
 				minlength={1}
 				maxlength={16}

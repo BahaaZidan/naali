@@ -3,24 +3,26 @@ import { videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
+import * as v from 'valibot';
 
 export const actions = {
 	default: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const name = formData.get('name')?.toString();
-		if (!name) {
-			return fail(400, { name, missing: true });
+		const schema = v.object({
+			name: v.string([v.toTrimmed(), v.minLength(1), v.maxLength(80)]),
+			id: v.string([v.minLength(1), v.maxLength(32)]),
+			description: v.optional(v.string([v.toTrimmed(), v.maxLength(5000)]))
+		});
+		const inputValidation = v.safeParse(schema, Object.fromEntries(formData.entries()));
+		if (!inputValidation.success) {
+			return fail(400, { errors: v.flatten(inputValidation.error) });
 		}
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
-		}
-		const description = formData.get('description')?.toString();
 
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
+		const { id, name, description } = inputValidation.output;
 		const update = await db
 			.update(videosTable)
 			.set({

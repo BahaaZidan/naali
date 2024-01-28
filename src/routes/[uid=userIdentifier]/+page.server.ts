@@ -6,37 +6,14 @@ import { db } from '$lib/db';
 import * as v from 'valibot';
 
 export const actions = {
-	publish: async ({ locals, request }) => {
-		const formData = await request.formData();
-		const name = formData.get('name')?.toString();
-		if (!name) {
-			return fail(400, { name, missing: true });
-		}
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
-		}
-		const description = formData.get('description')?.toString();
-
-		const session = await locals.getSession();
-		const logged_in_user_id = session?.user?.id;
-		if (!logged_in_user_id) return fail(401);
-
-		const update = await db
-			.update(videosTable)
-			.set({ name, description })
-			.where(and(eq(videosTable.id, id), eq(videosTable.creator, logged_in_user_id)));
-		if (!update) return fail(500);
-
-		return { success: true };
-	},
 	follow: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
+		const idInput = formData.get('id')?.toString();
+		const parsedInput = v.safeParse(v.string([v.uuid()]), idInput);
+		if (!parsedInput.success) {
+			return fail(400, v.flatten(parsedInput.error));
 		}
-
+		const id = parsedInput.output;
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
@@ -51,10 +28,12 @@ export const actions = {
 	},
 	unfollow: async ({ locals, request }) => {
 		const formData = await request.formData();
-		const id = formData.get('id')?.toString();
-		if (!id) {
-			return fail(400, { id, missing: true });
+		const idInput = formData.get('id')?.toString();
+		const parsedInput = v.safeParse(v.string([v.uuid()]), idInput);
+		if (!parsedInput.success) {
+			return fail(400, v.flatten(parsedInput.error));
 		}
+		const id = parsedInput.output;
 
 		const session = await locals.getSession();
 		const logged_in_user_id = session?.user?.id;
