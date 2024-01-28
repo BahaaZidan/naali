@@ -11,6 +11,7 @@ import {
 import type { Handle } from '@sveltejs/kit';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from '$lib/db';
+import { accountsTable, sessionsTable, usersTable, verificationTokensTable } from '$lib/db/schema';
 
 export const handle = SvelteKitAuth(async () => {
 	return {
@@ -20,7 +21,24 @@ export const handle = SvelteKitAuth(async () => {
 		],
 		secret: AUTH_SECRET,
 		trustHost: true,
-		adapter: DrizzleAdapter(db),
+		adapter: DrizzleAdapter(
+			db,
+			// @ts-expect-error wrong auth.js types. again.
+			(table) => {
+				switch (table) {
+					case 'user':
+						return usersTable;
+					case 'account':
+						return accountsTable;
+					case 'session':
+						return sessionsTable;
+					case 'verificationToken':
+						return verificationTokensTable;
+					default:
+						throw new Error(`Table ${table} not found`);
+				}
+			}
+		),
 		callbacks: {
 			session: async ({
 				session,
@@ -29,6 +47,8 @@ export const handle = SvelteKitAuth(async () => {
 			}) => {
 				if (session?.user) {
 					session.user.id = user.id;
+					// @ts-expect-error wrong auth.js types
+					session.user.handle = user.handle;
 				}
 				return session;
 			}

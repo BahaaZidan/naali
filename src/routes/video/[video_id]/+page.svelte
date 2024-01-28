@@ -31,7 +31,10 @@
 					</div>
 				</div>
 				<div class="flex flex-col">
-					<a class="link-hover line-clamp-1 text-lg" href="/user/{video.creator.id}">
+					<a
+						class="link-hover line-clamp-1 text-lg"
+						href="/{video.creator.handle || video.creator.id}"
+					>
 						{video.creator.name}
 					</a>
 					<div class="line-clamp-1 text-xs">1,000 Followers</div>

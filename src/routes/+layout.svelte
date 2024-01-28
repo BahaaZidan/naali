@@ -4,7 +4,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import SearchIcon from 'virtual:icons/tabler/search';
-
+	
 	onMount(() => {
 		const navbarElement = document.getElementById('main-navbar')?.offsetHeight;
 		if (navbarElement)
@@ -69,7 +69,10 @@
 					class="menu dropdown-content menu-md z-[9999] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
 					<li>
-						<a class="link-hover" href="/user/{$page.data.session?.user.id}">Profile</a>
+						<a
+							class="link-hover"
+							href="/{$page.data.session?.user.handle || $page.data.session?.user.id}">Profile</a
+						>
 					</li>
 					<li><a class="link-hover" href="/studio">Settings</a></li>
 					<div class="divider m-0"></div>

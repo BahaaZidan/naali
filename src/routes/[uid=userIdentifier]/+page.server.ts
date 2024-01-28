@@ -3,6 +3,7 @@ import { followsTable, usersTable, videosTable } from '$lib/db/schema';
 import { error, fail } from '@sveltejs/kit';
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
+import * as v from 'valibot';
 
 export const actions = {
 	publish: async ({ locals, request }) => {
@@ -69,11 +70,16 @@ export const actions = {
 };
 
 export const load = async ({ params, locals }) => {
-	const user_id = params.user_id;
-	const user = (await db.select().from(usersTable).where(eq(usersTable.id, user_id)).limit(1))[0];
+	const uid = params.uid;
+	const uuidSchema = v.string([v.uuid()]);
+	const userQueryCondition = v.safeParse(uuidSchema, uid).success
+		? eq(usersTable.id, uid)
+		: eq(usersTable.handle, uid);
 
+	const user = (await db.select().from(usersTable).where(userQueryCondition).limit(1))[0];
 	if (!user) return error(404);
 
+	const user_id = user.id;
 	const logged_in_user_id = (await locals.getSession())?.user?.id;
 	const is_own_profile = logged_in_user_id === user_id;
 	const videos_result = await db
