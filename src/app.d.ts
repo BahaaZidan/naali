@@ -3,17 +3,9 @@ import 'unplugin-icons/types/svelte';
 declare global {
 	namespace App {
 		// interface Error {}
-		interface Locals {
-			DB: D1Database;
-		}
+		// interface Locals {}
 		// interface PageData {}
-		interface Platform {
-			env: {
-				// KV: KVNamespace;
-				DB: D1Database;
-				// BUCKET: R2Bucket;
-			};
-		}
+		// interface Platform {}
 	}
 }
 
