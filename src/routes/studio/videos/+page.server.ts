@@ -12,7 +12,7 @@ export const actions = {
 		const idInput = formData.get('id')?.toString();
 		const parsedInput = v.safeParse(v.string([v.minLength(1), v.maxLength(32)]), idInput);
 		if (!parsedInput.success) {
-			return fail(400, v.flatten(parsedInput.error));
+			return fail(400, { errors: v.flatten(parsedInput.error) });
 		}
 		const id = parsedInput.output;
 

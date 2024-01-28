@@ -4,6 +4,10 @@
 	import { enhance } from '$app/forms';
 
 	export let data;
+	export let form;
+	$: {
+		if (form?.success || form?.errors) document.querySelector('dialog')?.close();
+	}
 </script>
 
 <h1 class="text-3xl">Videos</h1>
