@@ -1,12 +1,40 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
+	import type { MappedPost } from '$lib/db/queries-and-mappers';
 
 	export let data;
+	let loadingMorePosts = false;
+	let noMorePosts = false;
+	let morePosts: MappedPost[] = [];
+
+	$: posts = (data.posts || []).concat(morePosts);
+
+	async function loadMore() {
+		loadingMorePosts = true;
+		const offset = morePosts.length + (data.posts?.length || 0);
+		const limit = 10;
+
+		try {
+			const result = await fetch(`/api/posts?limit=${limit}&offset=${offset}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			const posts = (await result.json())?.posts as MappedPost[];
+			morePosts = morePosts.concat(posts);
+			noMorePosts = posts.length < limit;
+		} catch (e) {
+			noMorePosts = true;
+		} finally {
+			loadingMorePosts = false;
+		}
+	}
 </script>
 
-{#if data.posts?.length}
+{#if posts.length}
 	<div class="flex w-full flex-col items-center">
-		{#each data.posts as post}
+		{#each posts as post}
 			<div class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5">
 				<div class="flex gap-2">
 					<img
@@ -29,6 +57,15 @@
 				</a>
 			</div>
 		{/each}
+		<div class="m-4">
+			{#if noMorePosts}
+				<div class="text-lg">No more posts!</div>
+			{:else}
+				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMorePosts}
+					>Load more
+				</button>
+			{/if}
+		</div>
 	</div>
 {:else}
 	<div class="my-4 flex w-full flex-col items-center">
