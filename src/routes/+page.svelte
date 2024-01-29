@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import type { MappedPost } from '$lib/db/queries-and-mappers';
+	import { tick } from 'svelte';
 
 	export let data;
 	let loadingMorePosts = false;
@@ -21,9 +22,11 @@
 					'Content-Type': 'application/json'
 				}
 			});
-			const posts = (await result.json())?.posts as MappedPost[];
-			morePosts = morePosts.concat(posts);
-			noMorePosts = posts.length < limit;
+			const postsResult = (await result.json())?.posts as MappedPost[];
+			morePosts = morePosts.concat(postsResult);
+			noMorePosts = postsResult.length < limit;
+			await tick();
+			document.getElementById(postsResult[0]?.id)?.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
 			noMorePosts = true;
 		} finally {
@@ -35,7 +38,10 @@
 {#if posts.length}
 	<div class="flex w-full flex-col items-center">
 		{#each posts as post}
-			<div class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5">
+			<div
+				class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5"
+				id={post.id}
+			>
 				<div class="flex gap-2">
 					<img
 						src={post.creator?.image}
