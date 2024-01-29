@@ -17,7 +17,7 @@
 	}
 </script>
 
-<a class="w-64" href="/video/{id}">
+<a class="w-64" href="/video/{id}" {id}>
 	<div class="relative h-36 w-full rounded-sm bg-black">
 		<img class="h-36 w-64 object-contain" src={thumbnail} alt="" />
 		<div class="absolute bottom-1 right-2 bg-black bg-opacity-40 text-white">

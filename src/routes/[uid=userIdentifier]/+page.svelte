@@ -2,11 +2,42 @@
 	import VideoCard from '$lib/components/video-card.svelte';
 	import { enhance } from '$app/forms';
 	import InfoCircleIcon from 'virtual:icons/tabler/info-circle';
+	import { tick } from 'svelte';
 
+	const limit = 20;
 	export let data;
-	$: videos = data.videos;
 	$: user = data.user;
 	$: is_own_profile = data.is_own_profile;
+	type MappedVideos = NonNullable<typeof data.videos>;
+	let loaded: MappedVideos = [];
+	$: videos = (data.videos || []).concat(loaded);
+
+	let noMore = false;
+	let loadingMore = false;
+
+	async function loadMore() {
+		loadingMore = true;
+		const offset = videos.length;
+		try {
+			const result = await fetch(`/api/users/${user.id}/videos?limit=${limit}&offset=${offset}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			const videosResult = (await result.json())?.videos as MappedVideos;
+			console.log({ videosResult });
+			loaded = loaded.concat(videosResult);
+			noMore = videosResult.length < limit;
+			await tick();
+			if (videosResult[0]?.id)
+				document.getElementById(videosResult[0].id)?.scrollIntoView({ behavior: 'smooth' });
+		} catch (e) {
+			noMore = true;
+		} finally {
+			loadingMore = false;
+		}
+	}
 </script>
 
 {#if !user.handle}
@@ -62,4 +93,11 @@
 			/>
 		{/each}
 	</div>
+</div>
+<div class="m-3">
+	{#if noMore}
+		<div class="text-lg">No more videos!</div>
+	{:else}
+		<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
+	{/if}
 </div>

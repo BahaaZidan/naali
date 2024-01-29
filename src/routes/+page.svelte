@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
-	import type { MappedPost } from '$lib/db/queries-and-mappers';
 	import { tick } from 'svelte';
 
 	export let data;
-	let loadingMorePosts = false;
-	let noMorePosts = false;
-	let morePosts: MappedPost[] = [];
-
-	$: posts = (data.posts || []).concat(morePosts);
+	type MappedPosts = NonNullable<typeof data.posts>;
+	const limit = 20;
+	let loaded: MappedPosts = [];
+	$: posts = (data.posts || []).concat(loaded);
+	let noMore = false;
+	let loadingMore = false;
 
 	async function loadMore() {
-		loadingMorePosts = true;
-		const offset = morePosts.length + (data.posts?.length || 0);
-		const limit = 20;
+		loadingMore = true;
+		const offset = loaded.length + (data.posts?.length || 0);
 
 		try {
 			const result = await fetch(`/api/posts?limit=${limit}&offset=${offset}`, {
@@ -22,15 +21,16 @@
 					'Content-Type': 'application/json'
 				}
 			});
-			const postsResult = (await result.json())?.posts as MappedPost[];
-			morePosts = morePosts.concat(postsResult);
-			noMorePosts = postsResult.length < limit;
+			const postsResult = (await result.json())?.posts as MappedPosts;
+			loaded = loaded.concat(postsResult);
+			noMore = postsResult.length < limit;
 			await tick();
-			document.getElementById(postsResult[0]?.id)?.scrollIntoView({ behavior: 'smooth' });
+			if (postsResult[0]?.id)
+				document.getElementById(postsResult[0].id)?.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
-			noMorePosts = true;
+			noMore = true;
 		} finally {
-			loadingMorePosts = false;
+			loadingMore = false;
 		}
 	}
 </script>
@@ -64,12 +64,10 @@
 			</div>
 		{/each}
 		<div class="m-4">
-			{#if noMorePosts}
+			{#if noMore}
 				<div class="text-lg">No more posts!</div>
 			{:else}
-				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMorePosts}
-					>Load more
-				</button>
+				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
 			{/if}
 		</div>
 	</div>

@@ -16,8 +16,7 @@ export const postsFeedQuery = (logged_in_user_id: string) =>
 		.rightJoin(videoCreator, eq(videoCreator.id, videosTable.creator))
 		.where(eq(followsTable.follower, logged_in_user_id))
 		.orderBy(desc(postsTable.createdAt));
-
-export const postsFeedMapper = (p: Awaited<ReturnType<typeof postsFeedQuery>>) => ({
+export const postsFeedMapper = (p: Awaited<ReturnType<typeof postsFeedQuery>>[number]) => ({
 	id: p.posts?.id,
 	creator: p.postCreator,
 	video: {
@@ -29,4 +28,15 @@ export const postsFeedMapper = (p: Awaited<ReturnType<typeof postsFeedQuery>>) =
 	createdAt: p.posts?.createdAt
 });
 
-export type MappedPost = ReturnType<typeof postsFeedMapper>;
+export const videosInProfileQuery = (user_id: string) =>
+	db
+		.select()
+		.from(videosTable)
+		.where(eq(videosTable.creator, user_id))
+		.orderBy(desc(videosTable.createdAt));
+export const videosInProfileMapper = (
+	v: Awaited<ReturnType<typeof videosInProfileQuery>>[number]
+) => ({
+	...v,
+	thumbnail: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${v.id}/thumbnails/thumbnail.jpg`
+});
