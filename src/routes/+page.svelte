@@ -13,7 +13,7 @@
 	async function loadMore() {
 		loadingMorePosts = true;
 		const offset = morePosts.length + (data.posts?.length || 0);
-		const limit = 10;
+		const limit = 20;
 
 		try {
 			const result = await fetch(`/api/posts?limit=${limit}&offset=${offset}`, {
