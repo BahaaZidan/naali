@@ -9,7 +9,7 @@ export const GET = async ({ locals, url, params }) => {
 
 	const queryStrings = Object.fromEntries(url.searchParams.entries());
 	const schema = v.object({
-		limit: v.coerce(v.number([v.integer(), v.minValue(1), v.maxValue(20)]), Number),
+		limit: v.coerce(v.number([v.integer(), v.minValue(1), v.maxValue(40)]), Number),
 		offset: v.coerce(v.number([v.integer(), v.minValue(0), v.maxValue(1000)]), Number)
 	});
 	const validatedBody = v.parse(schema, queryStrings);

@@ -1,7 +1,7 @@
 import { alias } from 'drizzle-orm/pg-core';
 import { followsTable, postsTable, usersTable, videosTable } from '$lib/db/schema';
 import { db } from '$lib/db';
-import { desc, eq } from 'drizzle-orm';
+import { count, desc, eq } from 'drizzle-orm';
 import { PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE } from '$env/static/public';
 
 const postCreator = alias(usersTable, 'postCreator');
@@ -28,11 +28,13 @@ export const postsFeedMapper = (p: Awaited<ReturnType<typeof postsFeedQuery>>[nu
 	createdAt: p.posts?.createdAt
 });
 
-export const videosInProfileQuery = (user_id: string) =>
+export const videoCountQuery = (userId: string) =>
+	db.select({ value: count() }).from(videosTable).where(eq(videosTable.creator, userId));
+export const videosInProfileQuery = (userId: string) =>
 	db
 		.select()
 		.from(videosTable)
-		.where(eq(videosTable.creator, user_id))
+		.where(eq(videosTable.creator, userId))
 		.orderBy(desc(videosTable.createdAt));
 export const videosInProfileMapper = (
 	v: Awaited<ReturnType<typeof videosInProfileQuery>>[number]
