@@ -26,7 +26,6 @@
 				}
 			});
 			const videosResult = (await result.json())?.videos as MappedVideos;
-			console.log({ videosResult });
 			loaded = loaded.concat(videosResult);
 			noMore = videosResult.length < limit;
 			await tick();

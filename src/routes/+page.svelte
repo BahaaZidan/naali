@@ -3,16 +3,16 @@
 	import { tick } from 'svelte';
 
 	export let data;
-	type MappedPosts = NonNullable<typeof data.posts>;
+	$: posts = data.posts || [];
+	type MappedPosts = NonNullable<typeof posts>;
 	const limit = 20;
-	let loaded: MappedPosts = [];
-	$: posts = (data.posts || []).concat(loaded);
+	$: paginationPossible = posts.length >= limit;
 	let noMore = false;
 	let loadingMore = false;
 
 	async function loadMore() {
 		loadingMore = true;
-		const offset = loaded.length + (data.posts?.length || 0);
+		const offset = posts.length;
 
 		try {
 			const result = await fetch(`/api/posts?limit=${limit}&offset=${offset}`, {
@@ -22,7 +22,7 @@
 				}
 			});
 			const postsResult = (await result.json())?.posts as MappedPosts;
-			loaded = loaded.concat(postsResult);
+			posts = posts.concat(postsResult);
 			noMore = postsResult.length < limit;
 			await tick();
 			if (postsResult[0]?.id)
@@ -50,10 +50,10 @@
 					/>
 					<p>
 						<a class="link-hover" href="/{post.creator?.handle || post.creator?.id}"
-							>{post.creator?.name}</a
+						>{post.creator?.name}</a
 						>
 						shared this video {post.createdAt &&
-							formatDistance(post.createdAt, new Date(), { addSuffix: true })}
+					formatDistance(post.createdAt, new Date(), { addSuffix: true })}
 					</p>
 				</div>
 				<div class="divider m-0"></div>
@@ -63,13 +63,16 @@
 				</a>
 			</div>
 		{/each}
-		<div class="m-4">
-			{#if noMore}
-				<div class="text-lg">No more posts!</div>
-			{:else}
-				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
-			{/if}
-		</div>
+		{#if paginationPossible}
+
+			<div class="m-4">
+				{#if noMore}
+					<div class="text-lg">No more posts!</div>
+				{:else}
+					<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
+				{/if}
+			</div>
+		{/if}
 	</div>
 {:else}
 	<div class="my-4 flex w-full flex-col items-center">
