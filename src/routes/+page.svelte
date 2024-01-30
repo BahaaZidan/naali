@@ -1,34 +1,35 @@
 <script lang="ts">
 	import { formatDistance } from 'date-fns';
 	import { tick } from 'svelte';
+	import { POSTS_IN_HOME_LIMIT } from '$lib/constants';
 
 	export let data;
-	$: posts = data.posts || [];
-	type MappedPosts = NonNullable<typeof posts>;
-	const limit = 20;
-	$: paginationPossible = posts.length >= limit;
-	let noMore = false;
+
+	type MappedPosts = NonNullable<typeof data.posts>;
+	$: loaded = data.posts;
+	$: paginationDone = loaded && loaded.length < POSTS_IN_HOME_LIMIT;
 	let loadingMore = false;
+	$: posts = (data.posts || []);
 
 	async function loadMore() {
 		loadingMore = true;
 		const offset = posts.length;
 
 		try {
-			const result = await fetch(`/api/posts?limit=${limit}&offset=${offset}`, {
+			const result = await fetch(`/api/posts?limit=${POSTS_IN_HOME_LIMIT}&offset=${offset}`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			});
 			const postsResult = (await result.json())?.posts as MappedPosts;
+			loaded = postsResult;
 			posts = posts.concat(postsResult);
-			noMore = postsResult.length < limit;
 			await tick();
 			if (postsResult[0]?.id)
 				document.getElementById(postsResult[0].id)?.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
-			noMore = true;
+			paginationDone = true;
 		} finally {
 			loadingMore = false;
 		}
@@ -63,14 +64,9 @@
 				</a>
 			</div>
 		{/each}
-		{#if paginationPossible}
-
+		{#if !paginationDone}
 			<div class="m-4">
-				{#if noMore}
-					<div class="text-lg">No more posts!</div>
-				{:else}
-					<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
-				{/if}
+				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
 			</div>
 		{/if}
 	</div>

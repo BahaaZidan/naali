@@ -3,36 +3,36 @@
 	import { enhance } from '$app/forms';
 	import InfoCircleIcon from 'virtual:icons/tabler/info-circle';
 	import { tick } from 'svelte';
+	import { VIDEOS_IN_PROFILE_LIMIT } from '$lib/constants';
 
-	const limit = 20;
 	export let data;
 	$: user = data.user;
 	$: is_own_profile = data.is_own_profile;
-	type MappedVideos = NonNullable<typeof data.videos>;
-	let loaded: MappedVideos = [];
-	$: videos = (data.videos || []).concat(loaded);
 
-	let noMore = false;
+	type MappedVideos = NonNullable<typeof data.videos>;
+	$: loaded = data.videos;
+	$: paginationDone = loaded && loaded.length < VIDEOS_IN_PROFILE_LIMIT;
 	let loadingMore = false;
+	$: videos = (data.videos || []);
 
 	async function loadMore() {
 		loadingMore = true;
 		const offset = videos.length;
 		try {
-			const result = await fetch(`/api/users/${user.id}/videos?limit=${limit}&offset=${offset}`, {
+			const result = await fetch(`/api/users/${user.id}/videos?limit=${VIDEOS_IN_PROFILE_LIMIT}&offset=${offset}`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			});
 			const videosResult = (await result.json())?.videos as MappedVideos;
-			loaded = loaded.concat(videosResult);
-			noMore = videosResult.length < limit;
+			loaded = videosResult;
+			videos = videos.concat(videosResult);
 			await tick();
 			if (videosResult[0]?.id)
 				document.getElementById(videosResult[0].id)?.scrollIntoView({ behavior: 'smooth' });
 		} catch (e) {
-			noMore = true;
+			paginationDone = true;
 		} finally {
 			loadingMore = false;
 		}
@@ -93,10 +93,8 @@
 		{/each}
 	</div>
 </div>
-<div class="m-3">
-	{#if noMore}
-		<div class="text-lg">No more videos!</div>
-	{:else}
+{#if !paginationDone}
+	<div class="m-3">
 		<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
-	{/if}
-</div>
+	</div>
+{/if}

@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 import * as v from 'valibot';
 import { videosInProfileMapper, videosInProfileQuery } from '$lib/db/queries-and-mappers';
+import { VIDEOS_IN_PROFILE_LIMIT } from '$lib/constants';
 
 export const actions = {
 	follow: async ({ locals, request }) => {
@@ -61,7 +62,9 @@ export const load = async ({ params, locals }) => {
 	const user_id = user.id;
 	const logged_in_user_id = (await locals.getSession())?.user?.id;
 	const is_own_profile = logged_in_user_id === user_id;
-	const videos_result = await videosInProfileQuery(user_id).offset(0).limit(20);
+	const videos_result = await videosInProfileQuery(user_id)
+		.offset(0)
+		.limit(VIDEOS_IN_PROFILE_LIMIT);
 	const videos = videos_result.map(videosInProfileMapper);
 
 	const follows = logged_in_user_id
