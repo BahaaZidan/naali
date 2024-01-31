@@ -1,8 +1,11 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import * as v from 'valibot';
+import { minLength } from 'valibot';
 import { postsFeedMapper, postsFeedQuery } from '$lib/db/queries-and-mappers';
+import { db } from '$lib/db';
+import { postsTable } from '$lib/db/schema';
 
-export const GET: RequestHandler = async ({ locals, url }) => {
+export async function GET({ locals, url }) {
 	const session = await locals.getSession();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
@@ -20,4 +23,23 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 
 	const posts = postsResult.map(postsFeedMapper);
 	return json({ posts });
-};
+}
+
+export async function POST({ locals, request }) {
+	const session = await locals.getSession();
+	const authenticatedUserId = session?.user?.id;
+	if (!authenticatedUserId) return error(401);
+
+	const body = await request.json();
+	const schema = v.object({
+		videoId: v.string([minLength(32)]),
+		caption: v.optional(v.string([v.maxLength(1000)]))
+	});
+	const { videoId, caption } = v.parse(schema, body);
+
+	await db
+		.insert(postsTable)
+		.values({ creator: authenticatedUserId, videoId, caption, type: 'video' });
+
+	return json({ success: true });
+}

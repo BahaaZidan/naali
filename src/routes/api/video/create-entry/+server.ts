@@ -11,8 +11,7 @@ export async function POST({ request, locals }) {
 	const input = await request.json();
 	const schema = object({
 		video: object({
-			// TODO: validate ids better
-			id: string([minLength(1)]),
+			id: string([minLength(32)]),
 			creator: string([minLength(1)]),
 			name: string([minLength(1)]),
 			description: string(),
@@ -22,7 +21,6 @@ export async function POST({ request, locals }) {
 	const validated_input = parse(schema, input);
 	const video = validated_input.video;
 	const post = {
-		id: crypto.randomUUID(),
 		videoId: video.id,
 		creator: video.creator
 	};

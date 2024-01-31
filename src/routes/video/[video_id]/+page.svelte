@@ -3,9 +3,9 @@
 	import ThumbUpFilledIcon from 'virtual:icons/tabler/thumb-up-filled';
 	import ThumbDownIcon from 'virtual:icons/tabler/thumb-down';
 	import ThumbDownFilledIcon from 'virtual:icons/tabler/thumb-down-filled';
-	import ShareIcon from 'virtual:icons/tabler/share';
 	import SendIcon from 'virtual:icons/tabler/send';
 	import { enhance } from '$app/forms';
+	import RepostButton from '$lib/components/repost-button.svelte';
 
 	export let data;
 	$: ({ video } = data);
@@ -71,10 +71,7 @@
 						</button>
 					</form>
 				</div>
-				<button class="btn">
-					<ShareIcon class="size-5" />
-					Repost
-				</button>
+				<RepostButton id={video.id} />
 				<button class="btn">
 					<SendIcon class="size-5" />
 					Send

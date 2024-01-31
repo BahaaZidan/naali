@@ -40,7 +40,7 @@
 	<div class="flex w-full flex-col items-center">
 		{#each posts as post}
 			<div
-				class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5"
+				class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5 gap-1"
 				id={post.id}
 			>
 				<div class="flex gap-2">

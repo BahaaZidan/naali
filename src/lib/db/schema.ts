@@ -1,12 +1,13 @@
 import {
-	timestamp,
-	pgTable,
-	text,
-	primaryKey,
+	boolean,
 	integer,
+	pgTable,
+	primaryKey,
 	real,
+	text,
+	timestamp,
 	uniqueIndex,
-	boolean
+	uuid
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 
@@ -79,7 +80,7 @@ export const videosTable = pgTable('videos', {
 });
 
 export const postsTable = pgTable('posts', {
-	id: text('id').primaryKey(),
+	id: uuid('id').defaultRandom().primaryKey(),
 	createdAt: timestamp('createdAt').defaultNow(),
 	type: text('type', { enum: ['video'] }).default('video'),
 	caption: text('caption'),
