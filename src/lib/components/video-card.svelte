@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { parseIsoDurationString } from '$lib/utils/date';
 	import { formatDistanceToNow, formatISODuration } from 'date-fns';
+	import InfoCircleIcon from 'virtual:icons/tabler/info-circle';
 
 	export let id: string;
 	export let name: string;
@@ -29,7 +30,7 @@
 	}
 </script>
 
-<a href="/video/{id}" class="w-64 max-w-64 flex flex-col gap-1">
+<a href="/video/{id}" class="w-64 max-w-64 flex flex-col gap-1 group">
 	<div class="relative h-36 w-full rounded-sm bg-black">
 		<img class="h-36 w-64 object-contain" src={thumbnail} alt="" />
 		<div class="absolute bottom-1 right-2 bg-black bg-opacity-40 text-white">
@@ -38,11 +39,13 @@
 	</div>
 	<div class="flex gap-2">
 		{#if creator?.image}
-			<a href="/{creator.handle || creator.id}">
-				<img src={creator.image} alt={creator.name} class="w-11 object-fill rounded-full" />
+			<a href="/{creator.handle || creator.id}" class="avatar">
+				<div class="size-11 rounded-full">
+					<img src={creator.image} alt={creator.name} />
+				</div>
 			</a>
 		{/if}
-		<div class="text-md flex flex-col leading-tight tracking-tighter">
+		<div class="text-md flex flex-col leading-tight tracking-tighter flex-1">
 			<div class="text-black dark:text-white line-clamp-2">{name}</div>
 			{#if creator}
 				<a href="/{creator.handle || creator.id}" class="text-gray-400">{creator.name}</a>
@@ -51,5 +54,12 @@
 				<div class="text-gray-400">{formatDistanceToNow(createdAt, { addSuffix: true })}</div>
 			{/if}
 		</div>
+		{#if posts?.length}
+			<div class="tooltip opacity-0 group-hover:opacity-100" data-tip="Why is this in my feed ?">
+				<button class="btn btn-ghost btn-sm" on:click|stopPropagation|preventDefault={() => {alert("lolo")}}>
+					<InfoCircleIcon />
+				</button>
+			</div>
+		{/if}
 	</div>
 </a>
