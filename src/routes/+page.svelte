@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { formatDistance } from 'date-fns';
 	import { tick } from 'svelte';
 	import { POSTS_IN_HOME_LIMIT } from '$lib/constants';
+	import VideoCard from '$lib/components/video-card.svelte';
+	import groupBy from 'lodash/groupBy';
 
 	export let data;
 
@@ -10,6 +11,7 @@
 	$: paginationDone = loaded && loaded.length < POSTS_IN_HOME_LIMIT;
 	let loadingMore = false;
 	$: posts = (data.posts || []);
+	$: grouped = Object.entries(groupBy(posts, (p) => p.video.id));
 
 	async function loadMore() {
 		loadingMore = true;
@@ -36,43 +38,34 @@
 	}
 </script>
 
-{#if posts.length}
-	<div class="flex w-full flex-col items-center">
-		{#each posts as post}
-			<div
-				class="m-1 flex max-w-xl flex-col items-center rounded bg-accent-content p-5 gap-1"
-				id={post.id}
-			>
-				<div class="flex gap-2">
-					<img
-						src={post.creator?.image}
-						alt="{post.creator?.name} profile picture"
-						class="h-6 w-6 rounded-full"
+<div class="p-4">
+	{#if posts.length}
+		<div class="flex flex-wrap gap-3">
+			{#each grouped as group}
+				{@const video = group[1][0].video}
+				{@const reposts = group[1].map(p => ({ id: p.id, createdAt: p.createdAt, creator: p.creator }))}
+				{#if video.id && video.duration && video.name}
+					<VideoCard
+						id={video.id}
+						duration={video.duration}
+						name={video.name}
+						createdAt={video.createdAt}
+						thumbnail={video.thumbnail}
+						creator={video.creator}
+						posts={reposts}
 					/>
-					<p>
-						<a class="link-hover" href="/{post.creator?.handle || post.creator?.id}"
-						>{post.creator?.name}</a
-						>
-						shared this video {post.createdAt &&
-					formatDistance(post.createdAt, new Date(), { addSuffix: true })}
-					</p>
-				</div>
-				<div class="divider m-0"></div>
-				<a class="flex flex-col items-center gap-2" href="/video/{post.video.id}">
-					<img src={post.video.thumbnail} alt="thumbnail" class="w-80 object-contain" />
-					<div class="text-2xl">{post.video.name}</div>
-				</a>
-			</div>
-		{/each}
+				{/if}
+			{/each}
+		</div>
 		{#if !paginationDone}
 			<div class="m-4">
 				<button class="btn btn-lg" on:click={loadMore} disabled={loadingMore}>Load more</button>
 			</div>
 		{/if}
-	</div>
-{:else}
-	<div class="my-4 flex w-full flex-col items-center">
-		<h1 class="text-5xl">Your feed is empty</h1>
-		<h3 class="text-xl">Follow creators to fill it up!</h3>
-	</div>
-{/if}
+	{:else}
+		<div class="my-4 flex w-full flex-col items-center">
+			<h1 class="text-5xl">Your feed is empty</h1>
+			<h3 class="text-xl">Follow creators to fill it up!</h3>
+		</div>
+	{/if}
+</div>

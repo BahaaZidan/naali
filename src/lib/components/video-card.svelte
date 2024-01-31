@@ -7,6 +7,18 @@
 	export let thumbnail: string;
 	export let duration: number;
 	export let createdAt: Date | undefined | null;
+	export let creator: {
+		id?: string | null;
+		handle?: string | null;
+		name?: string | null;
+		image?: string | null;
+	} | undefined | null;
+	export let posts: {
+		id?: string | null;
+		caption?: string | null;
+		createdAt?: Date | null;
+		creator?: { id?: string | null; name?: string | null; handle?: string | null; } | null
+	}[] | undefined | null;
 
 	function formatSeconds(seconds: number) {
 		const isoDuration = formatISODuration({ seconds });
@@ -17,36 +29,27 @@
 	}
 </script>
 
-<a class="w-64" href="/video/{id}" {id}>
+<a href="/video/{id}" class="w-64 max-w-64 flex flex-col gap-1">
 	<div class="relative h-36 w-full rounded-sm bg-black">
 		<img class="h-36 w-64 object-contain" src={thumbnail} alt="" />
 		<div class="absolute bottom-1 right-2 bg-black bg-opacity-40 text-white">
 			{formatSeconds(duration)}
 		</div>
 	</div>
-	<div class="text-md flex flex-col leading-tight tracking-tighter">
-		<div class="overflow-hidden overflow-ellipsis text-black dark:text-white">{name}</div>
-		<!-- <div class="mt-1 flex items-baseline space-x-1">
-			<div class="text-gray-400">the bootleg boy</div>
-			<div class="h-3 w-3 pt-0.5">
-				<svg viewBox="0 0 24 24" class="text-gray-400" fill="currentColor">
-					<g
-						><path
-							fill-rule="evenodd"
-							clip-rule="evenodd"
-							d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10 S17.52,2,12,2z M9.92,17.93l-4.95-4.95l2.05-2.05l2.9,2.9l7.35-7.35l2.05,2.05L9.92,17.93z"
-						></path></g
-					>
-				</svg>
-			</div>
-		</div> -->
-		{#if createdAt}
-			<div class="text-gray-400">{formatDistanceToNow(createdAt, { addSuffix: true })}</div>
+	<div class="flex gap-2">
+		{#if creator?.image}
+			<a href="/{creator.handle || creator.id}">
+				<img src={creator.image} alt={creator.name} class="w-11 object-fill rounded-full" />
+			</a>
 		{/if}
-		<!-- <div
-			class="mt-1 w-max rounded-sm border border-red-500 px-1 py-0.5 text-xs font-bold tracking-wide text-red-600"
-		>
-			LIVE NOW
-		</div> -->
+		<div class="text-md flex flex-col leading-tight tracking-tighter">
+			<div class="text-black dark:text-white line-clamp-2">{name}</div>
+			{#if creator}
+				<a href="/{creator.handle || creator.id}" class="text-gray-400">{creator.name}</a>
+			{/if}
+			{#if createdAt}
+				<div class="text-gray-400">{formatDistanceToNow(createdAt, { addSuffix: true })}</div>
+			{/if}
+		</div>
 	</div>
 </a>

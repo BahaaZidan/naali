@@ -24,6 +24,7 @@
 		"@sveltejs/adapter-cloudflare": "^3.0.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@types/lodash": "^4.14.202",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.16",
@@ -58,6 +59,7 @@
 		"drizzle-orm": "^0.29.0",
 		"pg": "^8.11.3",
 		"postgres": "^3.4.3",
+		"type-fest": "^4.10.2",
 		"valibot": "^0.25.0"
 	}
 }
