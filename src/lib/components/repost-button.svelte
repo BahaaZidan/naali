@@ -50,7 +50,8 @@
 				<span>Error reposting this video!</span>
 			</div>
 		{/if}
-		<textarea bind:value={content} class="my-2 textarea textarea-bordered w-full" maxlength={1000} />
+		<textarea bind:value={content} class="my-2 textarea textarea-bordered w-full" maxlength={1000}
+							placeholder="Optional caption" />
 		<div class="modal-action">
 			<form method="dialog">
 				<button class="btn">Close</button>
