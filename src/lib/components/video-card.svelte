@@ -18,7 +18,7 @@
 		id?: string | null;
 		caption?: string | null;
 		createdAt?: Date | null;
-		creator?: { id?: string | null; name?: string | null; handle?: string | null; } | null
+		creator?: { id?: string | null; name?: string | null; handle?: string | null; image?: string | null; } | null
 	}[] | undefined | null;
 
 	function formatSeconds(seconds: number) {
@@ -27,6 +27,11 @@
 		const base = `${parsed.minutes}:${Math.trunc(parsed.seconds || 0)}`;
 		if (parsed.hours) return `${parsed.hours}:${base}`;
 		return base;
+	}
+
+	function showRepostsModal() {
+		// @ts-expect-error ts can't narrow the types to dialog element
+		document.getElementById(`reposts_modal_${id}`)?.showModal?.();
 	}
 </script>
 
@@ -56,10 +61,36 @@
 		</div>
 		{#if posts?.length}
 			<div class="tooltip opacity-0 group-hover:opacity-100" data-tip="Why is this in my feed ?">
-				<button class="btn btn-ghost btn-sm" on:click|stopPropagation|preventDefault={() => {alert("lolo")}}>
+				<button class="btn btn-ghost btn-sm" on:click|stopPropagation|preventDefault={showRepostsModal}>
 					<InfoCircleIcon />
 				</button>
 			</div>
+			<dialog id="reposts_modal_{id}" class="modal">
+				<div class="modal-box">
+					<h3 class="font-bold text-lg">Why is this in my feed ?</h3>
+					<div class="py-4 flex flex-col gap-2">
+						{#each posts as p}
+							<div class="flex gap-2">
+								<img
+									src={p.creator?.image}
+									alt="{p.creator?.name} profile picture"
+									class="h-6 w-6 rounded-full"
+								/>
+								<p>
+									<a class="link-hover" href="/{p.creator?.handle || p.creator?.id}">{p.creator?.name}</a>
+									shared this video {p.createdAt &&
+								formatDistanceToNow(p.createdAt, { addSuffix: true })}
+								</p>
+							</div>
+						{/each}
+					</div>
+					<div class="modal-action">
+						<form method="dialog">
+							<button class="btn">Close</button>
+						</form>
+					</div>
+				</div>
+			</dialog>
 		{/if}
 	</div>
 </a>
