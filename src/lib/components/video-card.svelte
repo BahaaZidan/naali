@@ -61,7 +61,7 @@
 		</div>
 		{#if posts?.length}
 			<div class="tooltip opacity-0 group-hover:opacity-100" data-tip="Why is this in my feed ?">
-				<button class="btn btn-ghost btn-sm" on:click|stopPropagation|preventDefault={showRepostsModal}>
+				<button class="btn btn-ghost btn-sm" on:click|preventDefault|stopPropagation={showRepostsModal}>
 					<InfoCircleIcon />
 				</button>
 			</div>
