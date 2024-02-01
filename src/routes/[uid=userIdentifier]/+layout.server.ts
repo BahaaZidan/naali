@@ -3,13 +3,10 @@ import { and, eq } from 'drizzle-orm';
 import { followsTable, usersTable } from '$lib/db/schema';
 import { db } from '$lib/db';
 import { error } from '@sveltejs/kit';
-import { videosInProfileMapper, videosInProfileQuery } from '$lib/db/queries-and-mappers';
-import { VIDEOS_IN_PROFILE_LIMIT } from '$lib/constants';
 
 export async function load({ params, locals }) {
 	const uid = params.uid;
-	const uuidSchema = v.string([v.uuid()]);
-	const userQueryCondition = v.safeParse(uuidSchema, uid).success
+	const userQueryCondition = v.safeParse(v.string([v.uuid()]), uid).success
 		? eq(usersTable.id, uid)
 		: eq(usersTable.handle, uid);
 
@@ -19,10 +16,6 @@ export async function load({ params, locals }) {
 	const user_id = user.id;
 	const logged_in_user_id = (await locals.getSession())?.user?.id;
 	const is_own_profile = logged_in_user_id === user_id;
-	const videos_result = await videosInProfileQuery(user_id)
-		.offset(0)
-		.limit(VIDEOS_IN_PROFILE_LIMIT);
-	const videos = videos_result.map(videosInProfileMapper);
 
 	const follows = logged_in_user_id
 		? await db
@@ -37,7 +30,6 @@ export async function load({ params, locals }) {
 	return {
 		is_own_profile,
 		user,
-		videos,
 		is_followed
 	};
 }

@@ -19,7 +19,8 @@
 				},
 				body: JSON.stringify({
 					videoId: id,
-					caption
+					caption,
+					createdAt: new Date()
 				})
 			});
 		} finally {

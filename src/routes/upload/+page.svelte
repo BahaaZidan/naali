@@ -98,7 +98,7 @@
 							'Content-Type': 'application/json'
 						}
 					}).then(async (res) => {
-						const result = await res.json<{ status: typeof status; duration: number }>();
+						const result = await res.json() as { status: typeof status; duration: number };
 						status = result?.status;
 
 						// TODO: handle errors (lol)
@@ -106,7 +106,7 @@
 							clearInterval(interval);
 							const video_entry = await fetch('/api/video/create-entry', {
 								method: 'POST',
-								body: JSON.stringify({ video: { ...video, duration: result.duration } }),
+								body: JSON.stringify({ video: { ...video, duration: result.duration, createdAt: new Date() } }),
 								headers: {
 									'Content-Type': 'application/json'
 								}

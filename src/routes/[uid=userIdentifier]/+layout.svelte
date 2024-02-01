@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import InfoCircleIcon from 'virtual:icons/tabler/info-circle';
+	import { page } from '$app/stores';
 
 	export let data;
+
+	$: baseProfileUrl = `/${data.user.handle || data.user.id}`;
 </script>
 
 
@@ -45,5 +48,9 @@
 		{/if}
 	</div>
 </div>
-<div class="divider my-0"></div>
+<div role="tablist" class="tabs tabs-bordered">
+	<a role="tab" class="tab" class:tab-active={!$page.url.pathname.includes('reposts')} href={baseProfileUrl}>Videos</a>
+	<a role="tab" class="tab tab-active" class:tab-active={$page.url.pathname.includes('reposts')}
+		 href="{baseProfileUrl}/reposts">Reposts</a>
+</div>
 <slot />

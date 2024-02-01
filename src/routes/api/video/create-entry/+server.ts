@@ -1,6 +1,6 @@
 import { postsTable, videosTable } from '$lib/db/schema';
 import { error, json } from '@sveltejs/kit';
-import { minLength, number, object, parse, string } from 'valibot';
+import * as v from 'valibot';
 import { db } from '$lib/db';
 
 export async function POST({ request, locals }) {
@@ -9,26 +9,26 @@ export async function POST({ request, locals }) {
 	if (!authenticatedUserId) return error(401);
 
 	const input = await request.json();
-	const schema = object({
-		video: object({
-			id: string([minLength(32)]),
-			creator: string([minLength(1)]),
-			name: string([minLength(1)]),
-			description: string(),
-			duration: number()
+	const schema = v.object({
+		video: v.object({
+			id: v.string([v.minLength(32)]),
+			creator: v.string([v.minLength(1)]),
+			name: v.string([v.minLength(1)]),
+			description: v.string(),
+			duration: v.number(),
+			createdAt: v.transform(v.string([v.isoTimestamp()]), (iso) => new Date(iso))
 		})
 	});
-	const validated_input = parse(schema, input);
+	const validated_input = v.parse(schema, input);
 	const video = validated_input.video;
 	const post = {
 		videoId: video.id,
-		creator: video.creator
+		creator: video.creator,
+		createdAt: video.createdAt
 	};
 
-	const insert_video = await db.insert(videosTable).values(video);
-	const insert_post = await db.insert(postsTable).values(post);
-	// TODO: better error handling
-	if (!insert_video || !insert_post) return error(500);
+	await db.insert(videosTable).values(video);
+	await db.insert(postsTable).values(post);
 
 	return json(validated_input);
 }

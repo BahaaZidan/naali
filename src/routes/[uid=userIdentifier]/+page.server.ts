@@ -3,6 +3,17 @@ import { fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 import * as v from 'valibot';
+import { videosInProfileMapper, videosInProfileQuery } from '$lib/db/queries-and-mappers';
+import { VIDEOS_IN_PROFILE_LIMIT } from '$lib/constants';
+
+export async function load({ parent }) {
+	const { user } = await parent();
+	const videos_result = await videosInProfileQuery(user.id)
+		.offset(0)
+		.limit(VIDEOS_IN_PROFILE_LIMIT);
+	const videos = videos_result.map(videosInProfileMapper);
+	return { videos };
+}
 
 export const actions = {
 	follow: async ({ locals, request }) => {
