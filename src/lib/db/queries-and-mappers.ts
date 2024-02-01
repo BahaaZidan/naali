@@ -24,7 +24,6 @@ export const postsFeedMapper = (p: Awaited<ReturnType<typeof postsFeedQuery>>[nu
 		creator: p.videoCreator,
 		thumbnail: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${p.videos?.id}/thumbnails/thumbnail.jpg`
 	},
-	caption: p.posts?.caption,
 	createdAt: p.posts?.createdAt
 });
 

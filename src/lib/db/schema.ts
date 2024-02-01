@@ -86,7 +86,6 @@ export const postsTable = pgTable(
 		id: uuid('id').defaultRandom().primaryKey(),
 		createdAt: timestamp('createdAt', { withTimezone: true }).notNull(),
 		type: text('type', { enum: ['video'] }).default('video'),
-		caption: text('caption'),
 		creator: text('creator')
 			.notNull()
 			.references(() => usersTable.id, { onDelete: 'cascade' }),

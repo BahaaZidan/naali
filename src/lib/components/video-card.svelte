@@ -16,7 +16,6 @@
 	} | undefined | null = null;
 	export let posts: {
 		id?: string | null;
-		caption?: string | null;
 		createdAt?: Date | null;
 		creator?: { id?: string | null; name?: string | null; handle?: string | null; image?: string | null; } | null
 	}[] | undefined | null = null;

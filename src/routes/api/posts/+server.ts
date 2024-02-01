@@ -33,14 +33,13 @@ export async function POST({ locals, request }) {
 	const body = await request.json();
 	const schema = v.object({
 		videoId: v.string([minLength(32)]),
-		caption: v.optional(v.string([v.maxLength(1000)])),
 		createdAt: v.transform(v.string([v.isoTimestamp()]), (iso) => new Date(iso))
 	});
-	const { videoId, caption, createdAt } = v.parse(schema, body);
+	const { videoId, createdAt } = v.parse(schema, body);
 
 	await db
 		.insert(postsTable)
-		.values({ creator: authenticatedUserId, videoId, caption, type: 'video', createdAt });
+		.values({ creator: authenticatedUserId, videoId, type: 'video', createdAt });
 
 	return json({ success: true });
 }
