@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { browser } from '$app/environment';
 	import ThumbUpIcon from 'virtual:icons/tabler/thumb-up';
 	import ThumbUpFilledIcon from 'virtual:icons/tabler/thumb-up-filled';
 	import ThumbDownIcon from 'virtual:icons/tabler/thumb-down';
@@ -8,9 +9,31 @@
 	import ShareIcon from 'virtual:icons/tabler/share';
 	import ShareOffIcon from 'virtual:icons/tabler/share-off';
 	import EditIcon from 'virtual:icons/tabler/edit';
+	import XIcon from 'virtual:icons/tabler/brand-x';
+	import RedditIcon from 'virtual:icons/tabler/brand-reddit';
+	import WhatsappIcon from 'virtual:icons/tabler/brand-whatsapp';
 
 	export let data;
 	$: ({ video } = data);
+
+	const shareTarget = [
+		{
+			icon: XIcon,
+			urlPrefix: 'https://twitter.com/intent/tweet?url='
+		},
+		{
+			icon: RedditIcon,
+			urlPrefix: 'https://reddit.com/submit?url='
+		},
+		{
+			icon: WhatsappIcon,
+			urlPrefix: 'https://api.whatsapp.com/send/?text='
+		}
+	];
+
+	function openSendDialog() {
+		(document.querySelector(`#send_dialog_${video.id}`) as HTMLDialogElement | null)?.showModal?.();
+	}
 </script>
 
 <main>
@@ -97,10 +120,30 @@
 						Edit
 					</a>
 				{/if}
-				<button class="btn">
+				<button class="btn" on:click={openSendDialog}>
 					<SendIcon class="size-5" />
 					Send
 				</button>
+				<dialog id="send_dialog_{video.id}" class="modal">
+					{#if browser}
+						<div class="modal-box">
+							<h3 class="font-bold text-lg mb-2">Send</h3>
+							<div class="flex flex-wrap gap-4">
+								{#each shareTarget as target}
+									<a class="btn btn-lg" href="{target.urlPrefix}{encodeURIComponent(window.location.href)}"
+										 target="_blank">
+										<svelte:component this={target.icon} class="size-14" />
+									</a>
+								{/each}
+							</div>
+							<div class="modal-action">
+								<form method="dialog">
+									<button class="btn">Close</button>
+								</form>
+							</div>
+						</div>
+					{/if}
+				</dialog>
 			</div>
 		</div>
 	</div>
