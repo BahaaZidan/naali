@@ -13,13 +13,13 @@
 		handle?: string | null;
 		name?: string | null;
 		image?: string | null;
-	} | undefined | null;
+	} | undefined | null = null;
 	export let posts: {
 		id?: string | null;
 		caption?: string | null;
 		createdAt?: Date | null;
 		creator?: { id?: string | null; name?: string | null; handle?: string | null; image?: string | null; } | null
-	}[] | undefined | null;
+	}[] | undefined | null = null;
 
 	function formatSeconds(seconds: number) {
 		const isoDuration = formatISODuration({ seconds });
