@@ -6,6 +6,7 @@ import {
 	real,
 	text,
 	timestamp,
+	unique,
 	uniqueIndex,
 	uuid
 } from 'drizzle-orm/pg-core';
@@ -79,18 +80,24 @@ export const videosTable = pgTable('videos', {
 	duration: real('duration').notNull().default(0)
 });
 
-export const postsTable = pgTable('posts', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	createdAt: timestamp('createdAt', { withTimezone: true }).notNull(),
-	type: text('type', { enum: ['video'] }).default('video'),
-	caption: text('caption'),
-	creator: text('creator')
-		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	videoId: text('videoId')
-		.notNull()
-		.references(() => videosTable.id, { onDelete: 'cascade' })
-});
+export const postsTable = pgTable(
+	'posts',
+	{
+		id: uuid('id').defaultRandom().primaryKey(),
+		createdAt: timestamp('createdAt', { withTimezone: true }).notNull(),
+		type: text('type', { enum: ['video'] }).default('video'),
+		caption: text('caption'),
+		creator: text('creator')
+			.notNull()
+			.references(() => usersTable.id, { onDelete: 'cascade' }),
+		videoId: text('videoId')
+			.notNull()
+			.references(() => videosTable.id, { onDelete: 'cascade' })
+	},
+	(t) => ({
+		unique_creator_video: unique().on(t.creator, t.videoId)
+	})
+);
 
 export const followsTable = pgTable(
 	'follows',

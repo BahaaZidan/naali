@@ -106,7 +106,13 @@
 							clearInterval(interval);
 							const video_entry = await fetch('/api/video/create-entry', {
 								method: 'POST',
-								body: JSON.stringify({ video: { ...video, duration: result.duration, createdAt: new Date() } }),
+								body: JSON.stringify({
+									video: {
+										...video,
+										duration: result.duration,
+										createdAt: (new Date()).toISOString()
+									}
+								}),
 								headers: {
 									'Content-Type': 'application/json'
 								}
