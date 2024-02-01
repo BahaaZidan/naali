@@ -4,7 +4,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import SearchIcon from 'virtual:icons/tabler/search';
-	
+
 	onMount(() => {
 		const navbarElement = document.getElementById('main-navbar')?.offsetHeight;
 		if (navbarElement)
@@ -28,7 +28,7 @@
 	<div class="h-1.5 w-full"></div>
 {/if}
 
-<nav id="main-navbar" class="navbar flex justify-between bg-base-100">
+<nav id="main-navbar" class="navbar flex justify-between bg-base-100 gap-2">
 	<div class="flex">
 		<a
 			class="link-hover font-mono text-2xl font-bold"
@@ -52,13 +52,6 @@
 	</div>
 	<div class="flex flex-none gap-4 pr-3">
 		{#if $page.data.session?.user}
-			<a
-				class="link-hover font-mono"
-				href="/upload"
-				aria-current={$page.url.pathname === '/upload'}
-			>
-				upload
-			</a>
 			<div class="dropdown dropdown-end">
 				<div tabindex="0" role="button" class="avatar btn btn-circle btn-ghost">
 					<div class="w-10 rounded-full">
@@ -68,6 +61,7 @@
 				<ul
 					class="menu dropdown-content menu-md z-[9999] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
+					<li><a class="link-hover" href="/upload">Upload</a></li>
 					<li>
 						<a
 							class="link-hover"
