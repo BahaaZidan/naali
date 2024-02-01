@@ -49,8 +49,8 @@
 	</div>
 </div>
 <div role="tablist" class="tabs tabs-bordered">
-	<a role="tab" class="tab" class:tab-active={!$page.url.pathname.includes('reposts')} href={baseProfileUrl}>Videos</a>
-	<a role="tab" class="tab tab-active" class:tab-active={$page.url.pathname.includes('reposts')}
-		 href="{baseProfileUrl}/reposts">Reposts</a>
+	<a role="tab" class="tab" class:tab-active={!$page.url.pathname.includes('activity')} href={baseProfileUrl}>Videos</a>
+	<a role="tab" class="tab tab-active" class:tab-active={$page.url.pathname.includes('activity')}
+		 href="{baseProfileUrl}/activity">Activity</a>
 </div>
 <slot />
