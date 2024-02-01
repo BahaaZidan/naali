@@ -32,7 +32,8 @@
 	];
 
 	function openSendDialog() {
-		(document.querySelector(`#send_dialog_${video.id}`) as HTMLDialogElement | null)?.showModal?.();
+		if (typeof navigator.share !== 'function') return (document.querySelector(`#send_dialog_${video.id}`) as HTMLDialogElement | null)?.showModal?.();
+		navigator.share({ url: `/videos/${video.id}` });
 	}
 </script>
 
