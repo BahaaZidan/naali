@@ -40,7 +40,7 @@
 
 <div class="p-4">
 	{#if posts.length}
-		<div class="flex flex-wrap gap-3">
+		<div class="flex flex-wrap justify-center md:justify-start gap-3">
 			{#each grouped as group}
 				{@const video = group[1][0].video}
 				{@const reposts = group[1].map(p => ({ id: p.id, createdAt: p.createdAt, creator: p.creator }))}
