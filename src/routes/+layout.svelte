@@ -1,8 +1,8 @@
 <script>
-	import { navigating, page, updated } from '$app/stores';
-	import { signOut } from '@auth/sveltekit/client';
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { signOut } from '@auth/sveltekit/client';
+	import { navigating, page, updated } from '$app/stores';
 	import SearchIcon from 'virtual:icons/tabler/search';
 
 	onMount(() => {
