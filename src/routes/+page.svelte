@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { POSTS_IN_HOME_LIMIT } from '$lib/constants';
 	import VideoCard from '$lib/components/video-card.svelte';
-	import groupBy from 'lodash/groupBy';
+	import { groupBy } from 'lodash-es';
 
 	export let data;
 
