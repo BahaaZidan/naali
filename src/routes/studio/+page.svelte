@@ -17,7 +17,15 @@
 			<span>Profile info changed successfully!</span>
 		</div>
 	{/if}
-	<form method="POST" class="flex w-full flex-col gap-4" use:enhance>
+	<form method="POST" enctype="multipart/form-data" class="flex w-full flex-col gap-4" use:enhance>
+		<label class="w-full">
+			<div class="label">
+				<span class="label-text">Picture</span>
+			</div>
+			<input type="file" name="picture" accept="image/jpeg, image/png"
+						 class="file-input file-input-bordered w-full max-w-lg" class:input-error={!!errors?.picture?.length} />
+			<ErrorLabel errorMessages={errors?.picture} />
+		</label>
 		<label class="w-full">
 			<div class="label">
 				<span class="label-text">Email</span>
