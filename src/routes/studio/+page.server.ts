@@ -33,7 +33,7 @@ export const actions = {
 			return fail(400, { errors: v.flatten(validationResult.error) });
 		}
 
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
@@ -71,7 +71,7 @@ export const actions = {
 };
 
 export const load = async ({ locals }) => {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const user_id = session?.user?.id;
 	if (!user_id) return error(404);
 

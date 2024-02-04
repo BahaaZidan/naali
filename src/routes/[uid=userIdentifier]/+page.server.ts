@@ -24,7 +24,7 @@ export const actions = {
 			return fail(400, v.flatten(parsedInput.error));
 		}
 		const id = parsedInput.output;
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 		if (id === logged_in_user_id) return fail(400, { id, incorrect: true });
@@ -45,7 +45,7 @@ export const actions = {
 		}
 		const id = parsedInput.output;
 
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 

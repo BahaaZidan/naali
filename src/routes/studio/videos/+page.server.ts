@@ -16,7 +16,7 @@ export const actions = {
 		}
 		const id = parsedInput.output;
 
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
@@ -40,7 +40,7 @@ export const actions = {
 };
 
 export const load = async ({ locals }) => {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const user = session?.user;
 	if (!user?.id) return error(401);
 

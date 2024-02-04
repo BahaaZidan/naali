@@ -6,7 +6,7 @@ import { db } from '$lib/db';
 import * as v from 'valibot';
 
 export const load = async ({ params, locals }) => {
-	const logged_user_id = (await locals.getSession())?.user?.id;
+	const logged_user_id = (await locals.auth())?.user?.id;
 
 	// TODO: return SEO info (open graph) without the video id for streaming
 	if (!logged_user_id) return error(404);
@@ -57,7 +57,7 @@ export const actions = {
 
 		const { id, value: valueString } = inputValidation.output;
 
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
@@ -89,7 +89,7 @@ export const actions = {
 			return fail(400, v.flatten(inputValidation.error));
 		}
 		const { videoId, createdAt } = inputValidation.output;
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 
@@ -107,7 +107,7 @@ export const actions = {
 			return fail(400, v.flatten(inputValidation.error));
 		}
 		const { videoId } = inputValidation.output;
-		const session = await locals.getSession();
+		const session = await locals.auth();
 		const logged_in_user_id = session?.user?.id;
 		if (!logged_in_user_id) return fail(401);
 

@@ -4,7 +4,7 @@ import * as v from 'valibot';
 import { db } from '$lib/db';
 
 export async function POST({ request, locals }) {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
 

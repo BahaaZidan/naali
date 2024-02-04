@@ -14,7 +14,7 @@ export async function load({ params, locals }) {
 	if (!user) return error(404);
 
 	const user_id = user.id;
-	const logged_in_user_id = (await locals.getSession())?.user?.id;
+	const logged_in_user_id = (await locals.auth())?.user?.id;
 	const is_own_profile = logged_in_user_id === user_id;
 
 	const follows = logged_in_user_id

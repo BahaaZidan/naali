@@ -6,7 +6,7 @@ import { db } from '$lib/db';
 import { postsTable } from '$lib/db/schema';
 
 export async function GET({ locals, url }) {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
 
@@ -26,7 +26,7 @@ export async function GET({ locals, url }) {
 }
 
 export async function POST({ locals, request }) {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
 

@@ -2,7 +2,7 @@ import { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_STREAM_API_TOKEN } from '$env/static/
 import { error } from '@sveltejs/kit';
 
 export async function POST({ request, locals }) {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
 

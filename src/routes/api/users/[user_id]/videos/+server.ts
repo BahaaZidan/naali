@@ -3,7 +3,7 @@ import * as v from 'valibot';
 import { videosInProfileMapper, videosInProfileQuery } from '$lib/db/queries-and-mappers';
 
 export const GET = async ({ locals, url, params }) => {
-	const session = await locals.getSession();
+	const session = await locals.auth();
 	const authenticatedUserId = session?.user?.id;
 	if (!authenticatedUserId) return error(401);
 
