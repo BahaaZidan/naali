@@ -220,7 +220,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="max-w-3xl flex flex-col gap-4 px-4 mt-4 mb-10">
+	<div class="max-w-3xl flex flex-col gap-6 px-4 mt-4 mb-10">
 		<h3 class="text-xl font-bold">Comments</h3>
 		<div class="flex flex-col gap-3">
 			<div class="flex gap-2">
