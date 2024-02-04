@@ -18,9 +18,15 @@
 		</div>
 	{/if}
 	<form method="POST" enctype="multipart/form-data" class="flex w-full flex-col gap-4" use:enhance>
+		<label class="w-full border max-w-lg p-2 rounded-md border-gray-700">
+			<div class="label">
+				<span class="label-text">Current picture</span>
+			</div>
+			<img src={user.image} class="size-16 object-cover" alt="profile picture">
+		</label>
 		<label class="w-full">
 			<div class="label">
-				<span class="label-text">Picture</span>
+				<span class="label-text">Change picture</span>
 			</div>
 			<input type="file" name="picture" accept="image/jpeg, image/png"
 						 class="file-input file-input-bordered w-full max-w-lg" class:input-error={!!errors?.picture?.length} />
