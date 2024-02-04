@@ -18,6 +18,7 @@
 	import DotsVerticalIcons from 'virtual:icons/tabler/dots-vertical';
 	import TrashIcon from 'virtual:icons/tabler/trash';
 	import { onMount } from 'svelte';
+	import { COMMENTS_LIMIT } from '$lib/constants';
 
 	type Comment = Omit<CommentsSelect, 'creator'> & { creator: UsersSelect };
 
@@ -27,6 +28,7 @@
 	let editingCommentId: string | undefined | null;
 	let editingCommentContent: string;
 	let comments: Comment[] = [];
+	let commentsPaginationDone = false;
 
 	const shareTarget = [
 		{
@@ -88,6 +90,13 @@
 		const response = await fetch(`/api/video/${video.id}/comments`);
 		const result = await response.json() as { comments: Comment[] };
 		comments = result.comments;
+	}
+
+	async function loadMoreComments() {
+		const response = await fetch(`/api/video/${video.id}/comments?offset=${comments.length}`);
+		const result = await response.json() as { comments: Comment[] };
+		if (result.comments.length < COMMENTS_LIMIT) commentsPaginationDone = true;
+		comments = comments.concat(result.comments);
 	}
 
 	onMount(() => {
@@ -314,6 +323,9 @@
 				</form>
 			</dialog>
 		{/each}
+		{#if !commentsPaginationDone}
+			<button class="btn" on:click={loadMoreComments}>More comments</button>
+		{/if}
 	</div>
 
 </main>
