@@ -8,7 +8,8 @@ import {
 	timestamp,
 	unique,
 	uniqueIndex,
-	uuid
+	uuid,
+	varchar
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 
@@ -128,3 +129,15 @@ export const likesTable = pgTable(
 		compoundKey: primaryKey({ columns: [t.liker, t.videoId] })
 	})
 );
+
+export const commentsTable = pgTable('comments', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	content: varchar('content', { length: 5_000 }).notNull(),
+	createdAt: timestamp('createdAt', { withTimezone: true }).notNull().defaultNow(),
+	creator: text('creator')
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	videoId: text('videoId')
+		.notNull()
+		.references(() => videosTable.id, { onDelete: 'cascade' })
+});
