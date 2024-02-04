@@ -27,6 +27,7 @@ export const usersTable = pgTable(
 		handleIndex: uniqueIndex('handleIndex').on(t.handle)
 	})
 );
+export type UsersSelect = typeof usersTable.$inferSelect;
 
 export const accountsTable = pgTable(
 	'account',
@@ -141,3 +142,5 @@ export const commentsTable = pgTable('comments', {
 		.notNull()
 		.references(() => videosTable.id, { onDelete: 'cascade' })
 });
+
+export type CommentsSelect = typeof commentsTable.$inferSelect;

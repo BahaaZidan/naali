@@ -12,9 +12,17 @@
 	import XIcon from 'virtual:icons/tabler/brand-x';
 	import RedditIcon from 'virtual:icons/tabler/brand-reddit';
 	import WhatsappIcon from 'virtual:icons/tabler/brand-whatsapp';
+	import { page } from '$app/stores';
+	import type { CommentsSelect, UsersSelect } from '$lib/db/schema';
+	import { formatDistanceToNow } from 'date-fns';
+
+	type Comment = Omit<CommentsSelect, 'creator'> & { creator: UsersSelect };
 
 	export let data;
 	$: ({ video } = data);
+	let commentValue = '';
+	let newComments: Comment[] = [];
+
 
 	const shareTarget = [
 		{
@@ -35,6 +43,32 @@
 		if (typeof navigator.share !== 'function') return (document.querySelector(`#send_dialog_${video.id}`) as HTMLDialogElement | null)?.showModal?.();
 		navigator.share({ url: `/videos/${video.id}` });
 	}
+
+	function clearCommentValue() {
+		commentValue = '';
+	}
+
+	async function submitComment() {
+		const response = await fetch(`/api/video/${video.id}/comments`, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ content: commentValue })
+		});
+		const { comment } = await response.json();
+		comment.creator = $page.data.session?.user;
+		newComments.unshift(comment);
+		newComments = newComments;
+		commentValue = '';
+	}
+
+	async function getComments() {
+		const response = await fetch(`/api/video/${video.id}/comments`);
+		const { comments } = await response.json() as { comments: Comment[] };
+		return comments;
+	}
+
 </script>
 
 <main>
@@ -148,4 +182,46 @@
 			</div>
 		</div>
 	</div>
+	<div class="flex flex-col gap-4 px-4 mt-4 mb-10">
+		<h3 class="text-xl font-bold">Comments</h3>
+		<div class="flex flex-col gap-3">
+			<div class="flex gap-2">
+				<img src={$page.data.session?.user?.image} class="size-12 rounded-full" alt="pp" />
+				<span class="textarea flex-1 whitespace-pre" role="textbox" data-placeholder="Write a comment..."
+							contenteditable
+							bind:textContent={commentValue}></span>
+			</div>
+			{#if commentValue.length > 0}
+				<div class="flex justify-end gap-3">
+					<button class="btn btn-ghost btn-sm" on:click={clearCommentValue}>Cancel</button>
+					<button class="btn btn-sm" on:click={submitComment}>Submit</button>
+				</div>
+			{/if}
+		</div>
+		{#await getComments()}
+			<div>Loading...</div>
+		{:then comments}
+			{@const allComments = newComments.concat(comments)}
+			{#each allComments as comment}
+				<div class="flex gap-2">
+					<img src={comment.creator.image} class="size-12 rounded-full" alt="pp" />
+					<div class="flex-1 flex flex-col">
+						<div class="flex gap-1">
+							<div class="font-bold">@{comment.creator.handle}</div>
+							<div class="text-neutral-content/50">{formatDistanceToNow(comment.createdAt, { addSuffix: true })}</div>
+						</div>
+						<div class="whitespace-pre-wrap">{comment.content}</div>
+					</div>
+				</div>
+			{/each}
+		{/await}
+	</div>
+
 </main>
+
+<style>
+    span[contenteditable]:empty:focus::before,
+    span[contenteditable]:empty::before {
+        content: attr(data-placeholder);
+    }
+</style>
