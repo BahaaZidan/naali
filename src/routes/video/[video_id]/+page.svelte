@@ -15,6 +15,7 @@
 	import { page } from '$app/stores';
 	import type { CommentsSelect, UsersSelect } from '$lib/db/schema';
 	import { formatDistanceToNow } from 'date-fns';
+	import DotsVerticalIcons from 'virtual:icons/tabler/dots-vertical';
 
 	type Comment = Omit<CommentsSelect, 'creator'> & { creator: UsersSelect };
 
@@ -22,7 +23,7 @@
 	$: ({ video } = data);
 	let commentValue = '';
 	let newComments: Comment[] = [];
-
+	let deletedComments: string[] = [];
 
 	const shareTarget = [
 		{
@@ -68,6 +69,20 @@
 		const { comments } = await response.json() as { comments: Comment[] };
 		return comments;
 	}
+
+	async function deleteComment(commentId: string) {
+		const response = await fetch(`/api/video/${video.id}/comments/${commentId}`, { method: 'DELETE' });
+		const { success } = await response.json();
+		if (success) {
+			deletedComments.push(commentId);
+			deletedComments = deletedComments;
+			(document.querySelector(`#delete_comment_dialog_${commentId}`) as HTMLDialogElement | null)?.close();
+		}
+	}
+
+	const openDeleteCommentDialog = (commentId: string) => () => {
+		(document.querySelector(`#delete_comment_dialog_${commentId}`) as HTMLDialogElement | null)?.showModal();
+	};
 
 </script>
 
@@ -182,7 +197,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex flex-col gap-4 px-4 mt-4 mb-10">
+	<div class="max-w-3xl flex flex-col gap-4 px-4 mt-4 mb-10">
 		<h3 class="text-xl font-bold">Comments</h3>
 		<div class="flex flex-col gap-3">
 			<div class="flex gap-2">
@@ -201,9 +216,9 @@
 		{#await getComments()}
 			<div>Loading...</div>
 		{:then comments}
-			{@const allComments = newComments.concat(comments)}
+			{@const allComments = newComments.concat(comments).filter(c => !deletedComments.includes(c.id))}
 			{#each allComments as comment}
-				<div class="flex gap-2">
+				<div class="group flex gap-2">
 					<img src={comment.creator.image} class="size-12 rounded-full" alt="pp" />
 					<div class="flex-1 flex flex-col">
 						<div class="flex gap-1">
@@ -212,7 +227,37 @@
 						</div>
 						<div class="whitespace-pre-wrap">{comment.content}</div>
 					</div>
+					{#if $page.data.session?.user?.id === comment.creator.id}
+						<div class="dropdown dropdown-end">
+							<div tabindex="0" role="button" class="btn btn-sm btn-ghost opacity-0 group-hover:opacity-100">
+								<DotsVerticalIcons class="size-5" />
+							</div>
+							<ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+								<li>
+									<button>Edit</button>
+								</li>
+								<li>
+									<button on:click={openDeleteCommentDialog(comment.id)}>Delete</button>
+								</li>
+							</ul>
+						</div>
+					{/if}
 				</div>
+				<dialog id="delete_comment_dialog_{comment.id}" class="modal">
+					<div class="modal-box">
+						<h3 class="font-bold text-lg">Delete comment ?</h3>
+						<p class="py-4">This action is irreversible! <br> Are you sure you want to delete this comment ?</p>
+						<div class="modal-action">
+							<form method="dialog">
+								<button class="btn">Cancel</button>
+							</form>
+							<button class="btn btn-ghost" on:click={() => { deleteComment(comment.id) }}>Delete</button>
+						</div>
+					</div>
+					<form method="dialog" class="modal-backdrop">
+						<button></button>
+					</form>
+				</dialog>
 			{/each}
 		{/await}
 	</div>

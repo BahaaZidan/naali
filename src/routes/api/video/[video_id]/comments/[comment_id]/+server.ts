@@ -26,18 +26,20 @@ export async function PUT({ params, locals, request }) {
 	const body = await request.json();
 	const { content } = v.parse(
 		v.object({
-			content: v.string([v.maxLength(5000), v.minLength(1)])
+			content: v.string([v.toTrimmed(), v.maxLength(5000), v.minLength(1)])
 		}),
 		body
 	);
 
-	const comment = await db
-		.update(commentsTable)
-		.set({ content })
-		.where(
-			and(eq(commentsTable.creator, authenticatedUserId), eq(commentsTable.id, params.comment_id))
-		)
-		.returning();
-	
+	const comment = (
+		await db
+			.update(commentsTable)
+			.set({ content })
+			.where(
+				and(eq(commentsTable.creator, authenticatedUserId), eq(commentsTable.id, params.comment_id))
+			)
+			.returning()
+	)[0];
+
 	return json({ comment });
 }
