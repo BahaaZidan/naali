@@ -28,12 +28,32 @@
 		{#if !data.is_own_profile}
 			<div class="flex gap-2">
 				{#if data.is_followed}
-					<form method="post" action="?/unfollow" use:enhance>
+					<form
+						method="post"
+						action="?/unfollow"
+						use:enhance={() => {
+							return async ({ result, update }) => {
+									if (result.type !== "success") return update();
+									data.is_followed = false;
+								}
+							}
+						}
+					>
 						<input type="hidden" value={data.user.id} name="id" />
 						<button class="btn btn-sm" type="submit">Unfollow</button>
 					</form>
 				{:else}
-					<form method="post" action="?/follow" use:enhance>
+					<form
+						method="post"
+						action="?/follow"
+						use:enhance={() => {
+							return async ({ result, update }) => {
+									if (result.type !== "success") return update();
+									data.is_followed = true;
+								}
+							}
+						}
+					>
 						<input type="hidden" value={data.user.id} name="id" />
 						<button class="btn btn-sm" type="submit">Follow</button>
 					</form>
