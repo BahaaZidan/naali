@@ -6,7 +6,7 @@ import { db } from '$lib/db';
 import * as v from 'valibot';
 import { streamSignedUrl } from '$lib/utils/tokens';
 
-export const load = async ({ params, locals }) => {
+export const load = async ({ params, locals, url }) => {
 	const result = await db
 		.select()
 		.from(videosTable)
@@ -16,9 +16,19 @@ export const load = async ({ params, locals }) => {
 	const video = result[0];
 	if (!video) return error(404);
 
+	const seo = {
+		title: video.videos.name,
+		description: video.videos.description,
+		og: {
+			title: video.videos.name,
+			description: video.videos.description,
+			site_name: 'naali',
+			type: 'video.other',
+			url: url.toString()
+		}
+	};
 	const logged_user_id = (await locals.auth())?.user?.id;
-	// TODO: return SEO info (open graph) without the video id for streaming
-	if (!logged_user_id) return error(404);
+	if (!logged_user_id) return { seo };
 
 	const like = (
 		await db
@@ -37,6 +47,7 @@ export const load = async ({ params, locals }) => {
 
 	const token = await streamSignedUrl(video.videos.id);
 	return {
+		seo,
 		video: {
 			...video.videos,
 			like: like?.value as boolean | undefined,
