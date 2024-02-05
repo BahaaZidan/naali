@@ -154,7 +154,17 @@
 			<div class="flex gap-2">
 				{#if !video.isOwn}
 					<div class="flex">
-						<form method="post" action="?/like" use:enhance>
+						<form
+							method="post"
+							action="?/like"
+							use:enhance={() => {
+								return async ({ result, update }) => {
+										if (result.type !== "success") return update();
+										video.like = video.like === true ? undefined : true;
+									}
+								}
+							}
+						>
 							<input type="hidden" value={video.id} name="id" />
 							<input type="hidden" value={video.like === true ? 'delete' : 'true'} name="value" />
 							<button class="btn rounded-e-none" type="submit">
@@ -165,7 +175,17 @@
 								{/if}
 							</button>
 						</form>
-						<form method="post" action="?/like" use:enhance>
+						<form
+							method="post"
+							action="?/like"
+							use:enhance={() => {
+								return async ({ result, update }) => {
+										if (result.type !== "success") return update();
+										video.like = video.like === false ? undefined : false;
+									}
+								}
+							}
+						>
 							<input type="hidden" value={video.id} name="id" />
 							<input type="hidden" value={video.like === false ? 'delete' : 'false'} name="value" />
 							<button class="btn rounded-s-none" type="submit">
@@ -177,9 +197,18 @@
 							</button>
 						</form>
 					</div>
-
 					{#if video.isRepostedByAuthenticatedUser}
-						<form method="post" action="?/undo_repost" use:enhance>
+						<form
+							method="post"
+							action="?/undo_repost"
+							use:enhance={() => {
+								return async ({ result, update }) => {
+										if (result.type !== "success") return update();
+										video.isRepostedByAuthenticatedUser = false;
+									}
+								}
+							}
+						>
 							<input type="hidden" value={video.id} name="videoId" />
 							<button class="btn" type="submit">
 								<ShareOffIcon class="size-5" />
@@ -187,7 +216,17 @@
 							</button>
 						</form>
 					{:else}
-						<form method="post" action="?/repost" use:enhance>
+						<form
+							method="post"
+							action="?/repost"
+							use:enhance={() => {
+								return async ({ result, update }) => {
+										if (result.type !== "success") return update();
+										video.isRepostedByAuthenticatedUser = true;
+									}
+								}
+							}
+						>
 							<input type="hidden" value={video.id} name="videoId" />
 							<input type="hidden" value={(new Date()).toISOString()} name="createdAt" />
 							<button class="btn" type="submit">
@@ -305,7 +344,6 @@
 						{/if}
 					</div>
 				{/if}
-
 			</div>
 			<dialog id="delete_comment_dialog_{comment.id}" class="modal">
 				<div class="modal-box">
@@ -327,7 +365,6 @@
 			<button class="btn" on:click={loadMoreComments}>More comments</button>
 		{/if}
 	</div>
-
 </main>
 
 <style>
