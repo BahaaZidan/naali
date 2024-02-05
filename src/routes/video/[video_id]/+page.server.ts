@@ -4,6 +4,7 @@ import { error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/db';
 import * as v from 'valibot';
+import { streamSignedUrl } from '$lib/utils/tokens';
 
 export const load = async ({ params, locals }) => {
 	const logged_user_id = (await locals.auth())?.user?.id;
@@ -24,6 +25,8 @@ export const load = async ({ params, locals }) => {
 	const video = result[0];
 	if (!video) return error(404);
 
+	const token = await streamSignedUrl(video.videos.id);
+
 	const isRepostedByAuthenticatedUser = !!(
 		await db
 			.select()
@@ -38,7 +41,7 @@ export const load = async ({ params, locals }) => {
 			isOwn: logged_user_id === video.videos.creator,
 			isRepostedByAuthenticatedUser,
 			creator: video.user,
-			stream_url: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${video.videos.id}/iframe`
+			stream_url: `https://customer-${PUBLIC_CLOUDFLARE_STREAM_CUSTOMER_CODE}.cloudflarestream.com/${token}/iframe`
 		}
 	};
 };

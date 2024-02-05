@@ -21,7 +21,7 @@ export async function GET({ locals, url }) {
 		.limit(validatedBody.limit)
 		.offset(validatedBody.offset);
 
-	const posts = postsResult.map(postsFeedMapper);
+	const posts = await Promise.all(postsResult.map(postsFeedMapper));
 	return json({ posts });
 }
 

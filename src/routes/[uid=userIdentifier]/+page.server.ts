@@ -11,7 +11,7 @@ export async function load({ parent }) {
 	const videos_result = await videosInProfileQuery(user.id)
 		.offset(0)
 		.limit(VIDEOS_IN_PROFILE_LIMIT);
-	const videos = videos_result.map(videosInProfileMapper);
+	const videos = await Promise.all(videos_result.map(videosInProfileMapper));
 	return { videos };
 }
 

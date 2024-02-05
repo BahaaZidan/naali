@@ -8,9 +8,8 @@ export async function POST({ request, locals }) {
 
 	const endpoint = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
 	const length = request.headers.get('Upload-Length');
-	const metadata = request.headers.get('Upload-Metadata');
 
-	if (!length || !metadata) return error(400);
+	if (!length) return error(400);
 
 	const response = await fetch(endpoint, {
 		method: 'POST',
@@ -18,7 +17,7 @@ export async function POST({ request, locals }) {
 			Authorization: `bearer ${CLOUDFLARE_STREAM_API_TOKEN}`,
 			'Tus-Resumable': '1.0.0',
 			'Upload-Length': length,
-			'Upload-Metadata': metadata,
+			'Upload-Metadata': `requiresignedurls, allowedorigins ${btoa('localhost:5173,*.naali.cc,naali.cc')}`,
 			'Upload-Creator': authenticatedUserId
 		}
 	});

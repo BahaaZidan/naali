@@ -18,6 +18,6 @@ export const GET = async ({ locals, url, params }) => {
 		.limit(validatedBody.limit)
 		.offset(validatedBody.offset);
 
-	const videos = result.map(videosInProfileMapper);
+	const videos = await Promise.all(result.map(videosInProfileMapper));
 	return json({ videos });
 };

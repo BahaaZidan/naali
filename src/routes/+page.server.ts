@@ -8,6 +8,6 @@ export const load = async ({ locals }) => {
 	if (!logged_in_user_id) return {};
 
 	const postsResult = await postsFeedQuery(logged_in_user_id).limit(POSTS_IN_HOME_LIMIT).offset(0);
-	const posts = postsResult.map(postsFeedMapper);
+	const posts = await Promise.all(postsResult.map(postsFeedMapper));
 	return { posts };
 };
