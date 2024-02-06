@@ -4,7 +4,7 @@ import { followsTable, usersTable } from '$lib/db/schema';
 import { db } from '$lib/db';
 import { error } from '@sveltejs/kit';
 
-export async function load({ params, locals }) {
+export async function load({ params, locals, url }) {
 	const uid = params.uid;
 	const userQueryCondition = v.safeParse(v.string([v.uuid()]), uid).success
 		? eq(usersTable.id, uid)
@@ -12,6 +12,17 @@ export async function load({ params, locals }) {
 
 	const user = (await db.select().from(usersTable).where(userQueryCondition).limit(1))[0];
 	if (!user) return error(404);
+
+	const seo = {
+		title: user.name,
+		og: {
+			title: user.name,
+			'profile:username': user.handle,
+			site_name: 'naali',
+			type: 'profile',
+			url: url.toString()
+		}
+	};
 
 	const user_id = user.id;
 	const logged_in_user_id = (await locals.auth())?.user?.id;
@@ -30,6 +41,7 @@ export async function load({ params, locals }) {
 	return {
 		is_own_profile,
 		user,
-		is_followed
+		is_followed,
+		seo
 	};
 }

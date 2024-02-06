@@ -8,6 +8,12 @@
 	$: baseProfileUrl = `/${data.user.handle || data.user.id}`;
 </script>
 
+<svelte:head>
+	<title>{data.seo.title}</title>
+	{#each Object.entries(data.seo.og) as [key, value]}
+		<meta property="og:{key}" content={value} />
+	{/each}
+</svelte:head>
 
 {#if !data.user.handle}
 	<div role="alert" class="alert">

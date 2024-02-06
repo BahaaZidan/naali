@@ -6,7 +6,14 @@ import * as v from 'valibot';
 import { videosInProfileMapper, videosInProfileQuery } from '$lib/db/queries-and-mappers';
 import { VIDEOS_IN_PROFILE_LIMIT } from '$lib/constants';
 
-export async function load({ parent }) {
+export async function load({ parent, locals }) {
+	const session = await locals.auth();
+	const authenticatedUserId = session?.user?.id;
+	// TODO: for security, we can't return the token in the thumbnail
+	//  revisit this when you're implementing the custom thumbnail feature
+	// a potential fix is to proxy all thumbnail images through a worker or something
+	if (!authenticatedUserId) return { videos: [] };
+
 	const { user } = await parent();
 	const videos_result = await videosInProfileQuery(user.id)
 		.offset(0)
