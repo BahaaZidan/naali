@@ -4,6 +4,10 @@
 	import { signOut } from '@auth/sveltekit/client';
 	import { navigating, page, updated } from '$app/stores';
 	import SearchIcon from 'virtual:icons/tabler/search';
+	import VideoPlusIcon from 'virtual:icons/tabler/video-plus';
+	import UserCircleIcon from 'virtual:icons/tabler/user-circle';
+	import SettingsIcon from 'virtual:icons/tabler/settings';
+	import Logout2Icon from 'virtual:icons/tabler/logout-2';
 
 	onMount(() => {
 		const navbarElement = document.getElementById('main-navbar')?.offsetHeight;
@@ -61,17 +65,26 @@
 				<ul
 					class="menu dropdown-content menu-md z-[9999] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
 				>
-					<li><a class="link-hover" href="/upload">Upload</a></li>
+					<li><a class="link-hover" href="/upload">
+						<VideoPlusIcon class="size-6" />
+						Upload</a></li>
 					<li>
 						<a
 							class="link-hover"
-							href="/{$page.data.session?.user.handle || $page.data.session?.user.id}">Profile</a
+							href="/{$page.data.session?.user.handle || $page.data.session?.user.id}">
+							<UserCircleIcon class="size-6" />
+							Profile</a
 						>
 					</li>
-					<li><a class="link-hover" href="/studio">Settings</a></li>
+					<li><a class="link-hover" href="/studio">
+						<SettingsIcon class="size-6" />
+						Settings</a></li>
 					<div class="divider m-0"></div>
 					<li>
-						<button class="link-hover" on:click={() => signOut()}>Logout</button>
+						<button class="link-hover" on:click={() => signOut()}>
+							<Logout2Icon class="size-6" />
+							Logout
+						</button>
 					</li>
 				</ul>
 			</div>
