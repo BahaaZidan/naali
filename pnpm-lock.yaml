@@ -6,13 +6,13 @@ settings:
 
 dependencies:
   '@auth/core':
-    specifier: ^0.22.0
+    specifier: 0.22.0
     version: 0.22.0
   '@auth/drizzle-adapter':
-    specifier: ^0.3.16
+    specifier: 0.3.16
     version: 0.3.16
   '@auth/sveltekit':
-    specifier: ^0.8.0
+    specifier: 0.8.0
     version: 0.8.0(@sveltejs/kit@2.5.0)(svelte@4.2.9)
   '@aws-sdk/client-s3':
     specifier: ^3.504.0
