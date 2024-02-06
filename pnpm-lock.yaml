@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@auth/core':
-    specifier: ^0.25.0
-    version: 0.25.0
+    specifier: ^0.22.0
+    version: 0.22.0
   '@auth/drizzle-adapter':
-    specifier: ^0.5.0
-    version: 0.5.0
+    specifier: ^0.3.16
+    version: 0.3.16
   '@auth/sveltekit':
-    specifier: ^0.11.0
-    version: 0.11.0(@sveltejs/kit@2.5.0)(svelte@4.2.9)
+    specifier: ^0.8.0
+    version: 0.8.0(@sveltejs/kit@2.5.0)(svelte@4.2.9)
   '@aws-sdk/client-s3':
     specifier: ^3.504.0
     version: 3.504.0
@@ -170,8 +170,8 @@ packages:
     resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
     dev: true
 
-  /@auth/core@0.25.0:
-    resolution: {integrity: sha512-UxENsD+WNlY1NOFsr3Ygc7F1Ypbia8VCd9NU8cbAhSJ0Z8dtyZ0xmssRo1G3ZW50QnW0AaAMuYzY5oumnPMQzA==}
+  /@auth/core@0.22.0:
+    resolution: {integrity: sha512-BwngPhtcEtJPV+sfs8pGPZ+RdKnpBeXRk2K2Os10DyMfaL/Vszj2TJU6sRaS38hXzo+xycYX+83olBElqc2Ngw==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -187,21 +187,21 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/drizzle-adapter@0.5.0:
-    resolution: {integrity: sha512-C02D7FGF7nI0snUjuKSLwMiinf5GX/maYFI79oaNWRx94ZzwtIWafnRi6Dr4ZV5rtk9fXvzDHw84+ZdwTjJE8w==}
+  /@auth/drizzle-adapter@0.3.16:
+    resolution: {integrity: sha512-08uS3j6Omzhshgtn8bjKxZlVOrO2Y3eXdTCYDFdhVAG7KpnotRYFhjrXqVlb9kjaNIxavnyad37+DtpIoOYqmg==}
     dependencies:
-      '@auth/core': 0.25.0
+      '@auth/core': 0.22.0
     transitivePeerDependencies:
       - nodemailer
     dev: false
 
-  /@auth/sveltekit@0.11.0(@sveltejs/kit@2.5.0)(svelte@4.2.9):
-    resolution: {integrity: sha512-vw/mtzmOksGn/Y89kxboSKMdglLypFB5ePrLkq9UejK0K/JL0tevyASmEgYauJrxjeBZpG+k7FEniw1q1K/zhg==}
+  /@auth/sveltekit@0.8.0(@sveltejs/kit@2.5.0)(svelte@4.2.9):
+    resolution: {integrity: sha512-vnlWDs2zDt5SYuZWZfn7kJ5lnnizGvhponwAg6XTyGcpBhlrJlMbAimCNyCuL80GlBArkovJvJ+l9ZGWDmMJ+g==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0 || ^5
     dependencies:
-      '@auth/core': 0.25.0
+      '@auth/core': 0.22.0
       '@sveltejs/kit': 2.5.0(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.9)(vite@5.0.12)
       set-cookie-parser: 2.6.0
       svelte: 4.2.9
