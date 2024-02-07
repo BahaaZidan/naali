@@ -1,4 +1,4 @@
-import { POSTGRES } from '$env/static/private';
+import { DATABASE_PRIVATE_URL } from '$env/static/private';
 import { drizzle } from 'drizzle-orm/postgres-js';
 // import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
@@ -9,5 +9,5 @@ import * as schema from './schema';
 // migrate(drizzle(migrationClient), ...)
 
 // for query purposes
-const queryClient = postgres(POSTGRES);
+const queryClient = postgres(DATABASE_PRIVATE_URL);
 export const db = drizzle(queryClient, { schema });
